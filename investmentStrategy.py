@@ -126,23 +126,15 @@ class indiWindow(QMainWindow):
         print("TR_name : ",TR_Name)
 
         if TR_Name == "SABA101U1":
-            print("주문번호", str(giCtrl.GetSingleData(0)))
-            print("메시지", str(giCtrl.GetSingleData(3)) )
-            # 리스트 뷰 모델 생성
-            list_model = QStandardItemModel(main_ui.listView_4)
+            # 새로운 행을 추가할 때
+            new_row = QListWidgetItem()
+            main_ui.listWidget_3.addItem(new_row)
 
-            # 행 추가
-            list_model.insertRow(list_model.rowCount())
-
-            # 데이터 추가
-            final_rowCount = list_model.rowCount() - 1
-            list_model.setItem(final_rowCount, 0, QStandardItem(str(giCtrl.GetSingleData(0))))  # 주문번호
-            list_model.setItem(final_rowCount, 1, QStandardItem(str(giCtrl.GetSingleData(3))))  # 메시지1
-            list_model.setItem(final_rowCount, 2, QStandardItem(str(giCtrl.GetSingleData(4))))  # 메시지2
-            list_model.setItem(final_rowCount, 3, QStandardItem(str(giCtrl.GetSingleData(5))))  # 메시지3
-
-            # 리스트 뷰에 모델 설정
-            main_ui.listView_4.setModel(list_model)
+            # 주문번호, 메시지1, 메시지2, 메시지3을 리스트에 추가
+            new_row.setData(0, str(giCtrl.GetSingleData(0)))  # 주문번호
+            new_row.setData(1, str(giCtrl.GetSingleData(3)))  # 메시지1
+            new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
+            new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

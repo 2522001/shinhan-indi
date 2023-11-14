@@ -39,6 +39,7 @@ class Ui_MainWindow(object):
         self.label_2 = QtWidgets.QLabel(self.groupBox_2)
         self.label_2.setGeometry(QtCore.QRect(40, 100, 111, 16))
         self.label_2.setObjectName("label_2")
+
         self.tableWidget_2 = QtWidgets.QTableWidget(self.groupBox_2)
         self.tableWidget_2.setGeometry(QtCore.QRect(40, 150, 431, 221))
         self.tableWidget_2.setObjectName("tableWidget_2")
@@ -80,6 +81,7 @@ class Ui_MainWindow(object):
         self.tableWidget_2.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(4, item)
+
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(590, 280, 311, 191))
         self.groupBox_3.setObjectName("groupBox_3")
@@ -116,11 +118,13 @@ class Ui_MainWindow(object):
         self.textBrowser = QtWidgets.QTextBrowser(self.groupBox)
         self.textBrowser.setGeometry(QtCore.QRect(460, 70, 361, 121))
         self.textBrowser.setObjectName("textBrowser")
+
         self.tableWidget = QtWidgets.QTableWidget(self.groupBox)
         self.tableWidget.setGeometry(QtCore.QRect(30, 70, 391, 121))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(6)
         self.tableWidget.setRowCount(0)
+
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -133,14 +137,20 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(5, item)
+
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_4.setGeometry(QtCore.QRect(590, 490, 311, 191))
         self.groupBox_4.setObjectName("groupBox_4")
-        self.tableWidget_3 = QtWidgets.QTableWidget(self.groupBox_4)
-        self.tableWidget_3.setGeometry(QtCore.QRect(30, 30, 251, 131))
-        self.tableWidget_3.setObjectName("tableWidget_3")
-        self.tableWidget_3.setColumnCount(0)
-        self.tableWidget_3.setRowCount(0)
+
+        self.listWidget_3 = QtWidgets.QTableWidget(self.groupBox_4)
+        self.listWidget_3.setGeometry(QtCore.QRect(30, 30, 251, 131))
+        self.listWidget_3.setObjectName("tableWidget_3")
+        self.listWidget_3.setColumnCount(0)
+        self.listWidget_3.setRowCount(0)
+        item = QtWidgets.QListWidgetItem('안녕!')
+        self.listWidget_3.addItem(item)
+
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 972, 21))
