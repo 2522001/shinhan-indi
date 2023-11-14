@@ -7,7 +7,7 @@ import pandas as pd
 import GiExpertControl as giLogin
 import GiExpertControl as giTradingTRShow
 import GiExpertControl as giJongmokTRShow
-# import GiExpertControl as giJongmokRealTime
+import GiExpertControl as giJongmokRealTime
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -31,9 +31,11 @@ class indiWindow(QMainWindow):
         main_ui.pushButton_2.clicked.connect(self.portfolioQueryButton_clicked)
         main_ui.pushButton_3_1.clicked.connect(self.buyButton_clicked)
         # main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
+        main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
+        main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
         giTradingTRShow.SetCallBack('ReceiveData', self.giTradingTRShow_ReceiveData)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
-        # giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
+        giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
@@ -136,8 +138,34 @@ class indiWindow(QMainWindow):
             new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
             new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
 
+    # 매도
+
+    # 시세 조회
+
+    def JongmokRealTimeQueryButton_clicked(self):      
+        jongmokCode = main_ui.lineEdit_5.text()
+        rqid = giJongmokRealTime.RequestRTReg("SC",jongmokCode)
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+
+    def giJongmokRealTime_ReceiveRTData(self,giCtrl,RealType):
+        if RealType == "SC":
+            main_ui.tableWidget_2.insertRow(main_ui.tableWidget_2.rowCount())
+            final_rowCount = main_ui.tableWidget_2.rowCount() - 1
+            main_ui.tableWidget_2.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
+            main_ui.tableWidget_2.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
+            main_ui.tableWidget_2.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
+            main_ui.tableWidget_2.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
+
+    def JongmokRealTimeStopButton_clicked(self):
+        giJongmokRealTime.UnRequestRTReg("SC", "")
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     IndiWindow = indiWindow()    
     IndiWindow.show()
     app.exec_()
+
+    if IndiWindow.MainSymbol != "":
+        giJongmokRealTime.UnRequestRTReg("SC", "")
