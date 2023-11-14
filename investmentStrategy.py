@@ -8,7 +8,7 @@ import GiExpertControl as giLogin
 import GiExpertControl as giTradingTRShow
 import GiExpertControl as giJongmokTRShow
 # import GiExpertControl as giJongmokRealTime
-from pythonUI import Ui_MainWindow
+from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
 
