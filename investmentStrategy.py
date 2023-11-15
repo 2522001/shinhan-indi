@@ -53,6 +53,11 @@ class indiWindow(QMainWindow):
     def portfolioQueryButton_clicked(self):
         gaejwa_text = main_ui.lineEdit_2_1.text()
         pw_text = main_ui.lineEdit_2_2.text()
+
+        global targetProfit
+        targetProfit_text = main_ui.lineEdit_2_3.text()
+        targetProfit = targetProfit_text
+
         TR_Name = "SABA200QB"          
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
         # print(giJongmokTRShow.GetErrorCode())
@@ -72,6 +77,8 @@ class indiWindow(QMainWindow):
         TR_Name = self.rqidD[rqid]
         tr_data_output = []
         output = []
+        totalProfit_output = []
+        totalProfit = 0
 
         print("TR_name : ",TR_Name)
         if TR_Name == "SABA200QB":
@@ -81,13 +88,43 @@ class indiWindow(QMainWindow):
                 tr_data_output.append([])
                 main_ui.tableWidget_2.setItem(i,0,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
                 main_ui.tableWidget_2.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                main_ui.tableWidget_2.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 결제일 잔고 수량
+                main_ui.tableWidget_2.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 결제일잔고수량
                 main_ui.tableWidget_2.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 현재가
                 main_ui.tableWidget_2.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 6)))) # 평균단가
-                for j in range(0,5):
+
+                profitRate = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) / float(giCtrl.GetMultiData(i, 6)) * 100)
+                main_ui.tableWidget_2.setItem(i,5,QTableWidgetItem(str(profitRate))) # 수익률 ((현재가-평균단가)/평균단가*100)
+
+                profit = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) * float(giCtrl.GetMultiData(i, 2)))
+                totalProfit_output.append(profit)
+                print(totalProfit_output)
+                main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(str(profit))) # 수익 ((현재가-평균단가)*결제일잔고수량)
+
+                main_ui.tableWidget_2.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 3)))) # 매도미체결수량
+                main_ui.tableWidget_2.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 매수미체결수량
+
+                for j in range(0,9):
                     tr_data_output[i].append(giCtrl.GetMultiData(i, j))
             print(type(tr_data_output))
             print(tr_data_output)
+
+            # 목표 수익 달성률 계산
+            if targetProfit and not targetProfit.isdigit():
+                targetProfitProgress = 0
+            else:
+                profits = [int(float(profit)) for profit in totalProfit_output]
+                print("TARGET PROFIT", targetProfit)
+                totalProfit = sum(profits)
+                print(totalProfit)
+                targetProfitProgress = (totalProfit / int(targetProfit)) * 100
+                print(targetProfitProgress)
+
+                if targetProfitProgress > 100:
+                    targetProfitProgress = 100
+                elif targetProfitProgress < 0:
+                    targetProfitProgress = 0
+
+            main_ui.progressBar_2.setProperty("value", targetProfitProgress)
 
     # 매수
 
