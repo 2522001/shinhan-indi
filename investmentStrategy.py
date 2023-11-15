@@ -26,6 +26,8 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
         giJongmokRealTime.RunIndiPython()
+        giJongmokRecommendTRShow.SetQtMode(True)
+        giJongmokRecommendTRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
