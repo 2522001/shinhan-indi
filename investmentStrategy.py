@@ -128,6 +128,7 @@ class indiWindow(QMainWindow):
         if TR_Name == "TR_1843_S":
 
             # 종가 데이터 담기
+
             nCnt = giCtrl.GetMultiRowCount()
 
             jongmokClosingPriceDate = []
@@ -142,6 +143,7 @@ class indiWindow(QMainWindow):
             print(jongmokClosingPrice)
 
             # 이동평균선 구하기
+
             movingAverages = [5, 20, 60, 120]
             MAList = [] # [[날짜, 현재가, 5일선, 20일선, 60일선, 120일선], ...]
             index = 1
@@ -157,6 +159,28 @@ class indiWindow(QMainWindow):
                 index += 1
 
             print(MAList)
+
+            # 이동평균선을 활용한 종목 검사
+
+            for sublist in MAList:
+                date = sublist[0]
+                currentPrice = sublist[1]
+                ma5 = sublist[2]
+                ma20 = sublist[3]
+                ma60 = sublist[4]
+                ma120 = sublist[5]
+
+                # 각 날짜에 대해 이동평균선 조건 확인
+                if ma5 >= ma20 >= ma60 >= ma120:
+                    print(f"{date}: 5일선>=20일선>=60일선>=120일선")
+
+                # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
+                percent_difference = ((currentPrice - ma20) / currentPrice) * 100
+
+                if percent_difference < 5:
+                    print(f"{date}: 20일선이 주가보다 5% 이내로 내려감 ({percent_difference:.2f}% 차이)")
+
+            # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
 
     # 나의 투자 분석 조회
 
