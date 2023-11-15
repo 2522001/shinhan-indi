@@ -5,10 +5,9 @@ from PyQt5.QAxContainer import *
 from PyQt5.QtWidgets import *
 import pandas as pd
 import GiExpertControl as giLogin
-import GiExpertControl as giTradingTRShow # 매수 매도
-import GiExpertControl as giJongmokTRShow # 잔고 및 주문체결 조회
-import GiExpertControl as giJongmokRealTime # 시세 조회
-import GiExpertControl as giJongmokRecommendTRShow # 종목 추천
+import GiExpertControl as giTradingTRShow
+import GiExpertControl as giJongmokTRShow
+import GiExpertControl as giJongmokRealTime
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -26,8 +25,6 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
         giJongmokRealTime.RunIndiPython()
-        giJongmokRecommendTRShow.SetQtMode(True)
-        giJongmokRecommendTRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -40,14 +37,13 @@ class indiWindow(QMainWindow):
         giTradingTRShow.SetCallBack('ReceiveData', self.giTradingTRShow_ReceiveData)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
         giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
-        # giJongmokRecommendTRShow.SetCallBack('ReceiveData', self.giJongmokRecommendTRShow_ReceiveData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
             print("")        
         elif  giLogin.GetCommState() == 1: # 비정상
         #본인의 ID 및 PW 넣으셔야 합니다.
-            login_return = giLogin.StartIndi('234110','test0365!','', 'C:\\SHINHAN-i\\indi\\GiExpertStarter.exe')
+            login_return = giLogin.StartIndi('아이디','비밀번호','공인인증서 비밀번호', 'C:\\SHINHAN-i\\indi\\GiExpertStarter.exe')
             if login_return == True:
                 print("INDI 로그인 정보","INDI 정상 호출")
             else:
