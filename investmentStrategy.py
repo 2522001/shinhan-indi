@@ -124,6 +124,7 @@ class indiWindow(QMainWindow):
         if TR_Name == "TR_1843_S":
             nCnt = giCtrl.GetMultiRowCount()
 
+            # 리스트에 120일 간의 종가를 담는다.
             jongmokClosingPrice = []
 
             for i in range(nCnt):
@@ -132,13 +133,17 @@ class indiWindow(QMainWindow):
 
             print(jongmokClosingPrice)
 
-                # 리스트에 120일 간의 종가를 담는다.
+            movingAverages = [5, 20, 60, 120]
+            MAList = []
 
-            # 리스트를 활용하여 오늘 날짜를 기준으로 (1)5일, (2)20일, (3)60일, (4)120일 이동평균을 구한다.
-            # 5일 선을 기준으로 20일, 60일, 120일 선과의 간격을 구한 후 (5)이 간격값의 평균을 구한다.
-            # 리스트2에 종목 코드값, (1), (2), (3), (4), (5)의 값을 리스트로 넣는다.
-            # (5)의 값이 작은 30개의 종목을 뽑고, 여기서 20일 이동평균이 현재가보다 낮은 종목만 골라서 리스트3에 담는다.
+            MAList.append(jongmokClosingPrice[-1]) # 현재가
 
+            for interval in movingAverages:
+            # 각 이동평균을 계산하고 리스트에 추가
+                average = sum(jongmokClosingPrice[-interval:]) / interval
+                MAList.append(average)
+
+            print(MAList)
 
     # 나의 투자 분석 조회
 
