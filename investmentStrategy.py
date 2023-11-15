@@ -108,10 +108,10 @@ class indiWindow(QMainWindow):
     # 종목 추천 - 검사1 : 이동평균선
 
     def calculateMAButton_clicked(self, jongmokCode):
-        TR_Name = "TR_1856_IND"          
+        TR_Name = "TR_1843_S"          
         ret = giCalculateMATRShow.SetQueryName(TR_Name)          
         ret = giCalculateMATRShow.SetSingleData(0,jongmokCode) # 종목코드
-        ret = giCalculateMATRShow.SetSingleData(1,"120") # 조회갯수
+        ret = giCalculateMATRShow.SetSingleData(1,"125") # 조회갯수
         rqid = giCalculateMATRShow.RequestData()
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
@@ -126,26 +126,35 @@ class indiWindow(QMainWindow):
 
         print("TR_name : ",TR_Name)
         if TR_Name == "TR_1843_S":
+
+            # 종가 데이터 담기
             nCnt = giCtrl.GetMultiRowCount()
 
-            # 리스트에 120일 간의 종가를 담는다.
+            jongmokClosingPriceDate = []
             jongmokClosingPrice = []
 
             for i in range(nCnt):
+                date = str(giCtrl.GetMultiData(i, 0)) # 일자
                 closingPrice = str(giCtrl.GetMultiData(i, 5)) # 종가
+                jongmokClosingPriceDate.append(date)
                 jongmokClosingPrice.append(closingPrice)
 
             print(jongmokClosingPrice)
 
+            # 이동평균선 구하기
             movingAverages = [5, 20, 60, 120]
-            MAList = []
+            MAList = [] # [[날짜, 현재가, 5일선, 20일선, 60일선, 120일선], ...]
+            index = 1
 
-            MAList.append(jongmokClosingPrice[-1]) # 현재가
-
-            for interval in movingAverages:
-            # 각 이동평균을 계산하고 리스트에 추가
-                average = sum(jongmokClosingPrice[-interval:]) / interval
-                MAList.append(average)
+            for i in range(5):
+                sublist = []
+                sublist.append(date[-index])  # 날짜
+                sublist.append(jongmokClosingPrice[-index])  # 현재가
+                for interval in movingAverages:
+                    average = sum(jongmokClosingPrice[-interval:]) / interval
+                    sublist.append(average)
+                MAList.append(sublist)
+                index += 1
 
             print(MAList)
 
