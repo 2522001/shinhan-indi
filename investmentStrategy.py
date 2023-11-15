@@ -24,6 +24,7 @@ class indiWindow(QMainWindow):
         giLogin.RunIndiPython()
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
+        giJongmokRealTime.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -187,12 +188,12 @@ class indiWindow(QMainWindow):
 
     def giJongmokRealTime_ReceiveRTData(self,giCtrl,RealType):
         if RealType == "SC":
-            main_ui.tableWidget_2.insertRow(main_ui.tableWidget_2.rowCount())
-            final_rowCount = main_ui.tableWidget_2.rowCount() - 1
-            main_ui.tableWidget_2.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
-            main_ui.tableWidget_2.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
-            main_ui.tableWidget_2.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
-            main_ui.tableWidget_2.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
+            main_ui.tableWidget_5.insertRow(main_ui.tableWidget_5.rowCount())
+            final_rowCount = main_ui.tableWidget_5.rowCount() - 1
+            main_ui.tableWidget_5.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
+            main_ui.tableWidget_5.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
+            main_ui.tableWidget_5.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
+            main_ui.tableWidget_5.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
 
     def JongmokRealTimeStopButton_clicked(self):
         giJongmokRealTime.UnRequestRTReg("SC", "")
