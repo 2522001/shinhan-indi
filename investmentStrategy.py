@@ -9,6 +9,7 @@ import GiExpertControl as giTradingTRShow
 import GiExpertControl as giJongmokTRShow
 import GiExpertControl as giJongmokRealTime
 import GiExpertControl as giJongmokRecommendTRShow # 종목 추천
+import GiExpertControl as giCalculateMATRShow # 이동평균선 계산
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -26,6 +27,8 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
         giJongmokRealTime.RunIndiPython()
+        giCalculateMATRShow.SetQtMode(True)
+        giCalculateMATRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -39,6 +42,7 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
         giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
         giJongmokRecommendTRShow.SetCallBack('ReceiveData', self.giJongmokRecommendTRShow_ReceiveData)
+        giCalculateMATRShow.SetCallBack('ReceiveData', self.giCalculateTRShow_ReceiveData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
@@ -79,11 +83,13 @@ class indiWindow(QMainWindow):
             for i in range(0, nCnt):
                 tr_data_output.append([])
 
+                jongmokCode = str(giCtrl.GetMultiData(i, 0))
+
                 button = QPushButton("담기")
                 main_ui.tableWidget.setCellWidget(i, 0, button)
-                # button.clicked.connect(partial(self.pushButton_5_clicked, jongmokCode))
+                button.clicked.connect(partial(self.calculateMAButton_clicked, jongmokCode))
 
-                main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
+                main_ui.tableWidget.setItem(i,1,QTableWidgetItem(jongmokCode)) # 종목코드
                 main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
                 main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
                 main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
@@ -94,6 +100,44 @@ class indiWindow(QMainWindow):
                     tr_data_output[i].append(giCtrl.GetMultiData(i, j))
             print(type(tr_data_output))
             print(tr_data_output)
+
+    # 종목 추천 - 검사1 : 이동평균선
+
+    def calculateMAButton_clicked(self, jongmokCode):
+        TR_Name = "TR_1856_IND"          
+        ret = giCalculateMATRShow.SetQueryName(TR_Name)          
+        ret = giCalculateMATRShow.SetSingleData(0,jongmokCode) # 종목코드
+        ret = giCalculateMATRShow.SetSingleData(1,"120") # 조회갯수
+        rqid = giCalculateMATRShow.RequestData()
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+        self.rqidD[rqid] = TR_Name
+
+    def giCalculateTRShow_ReceiveData(self,giCtrl,rqid):
+        print("in receive_Data:",rqid)
+        print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
+        TR_Name = self.rqidD[rqid]
+        tr_data_output = []
+        output = []
+
+        print("TR_name : ",TR_Name)
+        if TR_Name == "TR_1843_S":
+            nCnt = giCtrl.GetMultiRowCount()
+
+            jongmokClosingPrice = []
+
+            for i in range(nCnt):
+                closingPrice = str(giCtrl.GetMultiData(i, 5)) # 종가
+                jongmokClosingPrice.append(closingPrice)
+
+            print(jongmokClosingPrice)
+
+                # 리스트에 120일 간의 종가를 담는다.
+
+            # 리스트를 활용하여 오늘 날짜를 기준으로 (1)5일, (2)20일, (3)60일, (4)120일 이동평균을 구한다.
+            # 5일 선을 기준으로 20일, 60일, 120일 선과의 간격을 구한 후 (5)이 간격값의 평균을 구한다.
+            # 리스트2에 종목 코드값, (1), (2), (3), (4), (5)의 값을 리스트로 넣는다.
+            # (5)의 값이 작은 30개의 종목을 뽑고, 여기서 20일 이동평균이 현재가보다 낮은 종목만 골라서 리스트3에 담는다.
 
 
     # 나의 투자 분석 조회
