@@ -5,11 +5,13 @@ from PyQt5.QAxContainer import *
 from PyQt5.QtWidgets import *
 import pandas as pd
 import GiExpertControl as giLogin
-import GiExpertControl as giTradingTRShow
-import GiExpertControl as giJongmokTRShow
-import GiExpertControl as giJongmokRealTime
+import GiExpertControl as giTradingTRShow # 매수 매도
+import GiExpertControl as giJongmokTRShow # 잔고 및 주문체결 조회
+import GiExpertControl as giJongmokRealTime # 시세 조회
 import GiExpertControl as giJongmokRecommendTRShow # 종목 추천
+import GiExpertControl as giCalculateMATRShow # 이동평균선 계산
 from indiUI import Ui_MainWindow
+from datetime import datetime, timedelta
 
 main_ui = Ui_MainWindow()
 
@@ -26,6 +28,10 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
         giJongmokRealTime.RunIndiPython()
+        giJongmokRecommendTRShow.SetQtMode(True)
+        giJongmokRecommendTRShow.RunIndiPython()
+        giCalculateMATRShow.SetQtMode(True)
+        giCalculateMATRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -39,17 +45,18 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
         giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
         giJongmokRecommendTRShow.SetCallBack('ReceiveData', self.giJongmokRecommendTRShow_ReceiveData)
+        giCalculateMATRShow.SetCallBack('ReceiveData', self.giCalculateTRShow_ReceiveData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
             print("")        
         elif  giLogin.GetCommState() == 1: # 비정상
         #본인의 ID 및 PW 넣으셔야 합니다.
-            login_return = giLogin.StartIndi('아이디','비밀번호','공인인증서 비밀번호', 'C:\\SHINHAN-i\\indi\\GiExpertStarter.exe')
+            login_return = giLogin.StartIndi('234110','test0365!','', 'C:\\SHINHAN-i\\indi\\GiExpertStarter.exe')
             if login_return == True:
                 print("INDI 로그인 정보","INDI 정상 호출")
             else:
-                print("INDI 로그인 정보","INDI 호출 실패")
+                print("INDI 로그인 정보","INDI 호출 실패") 
 
     # 종목 추천
 
@@ -75,22 +82,75 @@ class indiWindow(QMainWindow):
         print("TR_name : ",TR_Name)
         if TR_Name == "TR_1856_IND":
             nCnt = giCtrl.GetMultiRowCount()
-            print("c")
-            for i in range(0, nCnt):
-                tr_data_output.append([])
-                main_ui.tableWidget.setItem(i,0,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
-                main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
-                main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
-                main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
-                main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
 
-                for j in range(0,6):
-                    tr_data_output[i].append(giCtrl.GetMultiData(i, j))
-            print(type(tr_data_output))
-            print(tr_data_output)
+            global jongmokRecommend
+            jongmokRecommend = []
+            
 
+            for i in range(nCnt):
+                jongmokCode = str(giCtrl.GetMultiData(i, 0))
+                jongmokName = str(giCtrl.GetMultiData(i, 1))
+                jongmokPrice = str(giCtrl.GetMultiData(i, 2))
+                print("하이하이하이2")
+                jongmokRecommend.append([jongmokCode, jongmokName, jongmokPrice])
+        print("시가총액200", jongmokRecommend)
+        self.calculateMA()
+        print("함수 불러와짐")
 
+    def calculateMA(self):
+        # 이동평균선이 모이면서 20일 선이 주가 한 발 아래인 종목
+        # 오늘 날짜 구하기
+        today = datetime.today().date()
+        today = today.strftime("%Y%m%d")
+        print("오늘 날짜:", today)
+
+        # 오늘로부터 160일 전 날짜 구하기
+        days_before = timedelta(days=160)
+        date_before_160_days = today - days_before
+        date_before_160_days = date_before_160_days.strftime("%Y%m%d")
+        print("오늘로부터 160일 전 날짜:", date_before_160_days)
+
+        # jongmokRecommend 리스트 내 jongmokCode를 전달 받아 각 jongmokCode 마다 아래 로직 시행
+        TR_Name = "TR_SCHART"          
+        ret = giJongmokRecommendTRShow.SetQueryName(TR_Name)         
+        ret = giJongmokRecommendTRShow.SetSingleData(0,"005930") # 종목코드
+        ret = giJongmokRecommendTRShow.SetSingleData(1,"D") # 그래프종류 - 일데이터
+        ret = giJongmokRecommendTRShow.SetSingleData(2,"1") # 시간간격 - 일데이터
+        ret = giJongmokRecommendTRShow.SetSingleData(3,date_before_160_days) # 시작일 - 영업일 고려하여 널널하게 160일 전
+        ret = giJongmokRecommendTRShow.SetSingleData(4,today) # 종료일
+        ret = giJongmokRecommendTRShow.SetSingleData(4,"120") # 조회갯수
+        rqid = giJongmokRecommendTRShow.RequestData()
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+        self.rqidD[rqid] = TR_Name
+
+    def giCalculateTRShow_ReceiveData(self,giCtrl,rqid):
+        print("in receive_Data:",rqid)
+        print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
+        TR_Name = self.rqidD[rqid]
+        tr_data_output = []
+        output = []
+
+        print("TR_name : ",TR_Name)
+        if TR_Name == "TR_SCHART":
+            nCnt = giCtrl.GetMultiRowCount()
+
+            jongmokClosingPrice = []
+
+            for i in range(nCnt):
+                closingPrice = str(giCtrl.GetMultiData(i, 5)) # 종가
+                jongmokClosingPrice.append(closingPrice)
+
+            print(jongmokClosingPrice)
+
+                # 리스트에 120일 간의 종가를 담는다.
+
+            # 리스트를 활용하여 오늘 날짜를 기준으로 (1)5일, (2)20일, (3)60일, (4)120일 이동평균을 구한다.
+            # 5일 선을 기준으로 20일, 60일, 120일 선과의 간격을 구한 후 (5)이 간격값의 평균을 구한다.
+            # 리스트2에 종목 코드값, (1), (2), (3), (4), (5)의 값을 리스트로 넣는다.
+            # (5)의 값이 작은 30개의 종목을 뽑고, 여기서 20일 이동평균이 현재가보다 낮은 종목만 골라서 리스트3에 담는다.
+
+        
     # 나의 투자 분석 조회
 
     def portfolioQueryButton_clicked(self):
