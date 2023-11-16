@@ -26,13 +26,12 @@ class indiWindow(QMainWindow):
         main_ui.pushButton_2.clicked.connect(self.portfolioQueryButton_clicked)
         main_ui.pushButton_3_1.clicked.connect(self.buyButton_clicked)
         main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
-        #main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
-        #main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
 
     # 종목 추천
 
     def jongmokRecommendButton_clicked(self):
+        print("종목추천 시작")
         TR_Name = "TR_1856_IND"          
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
         ret = giJongmokTRShow.SetSingleData(0,"2") # 장구분 - 전체
@@ -78,8 +77,8 @@ class indiWindow(QMainWindow):
             global globalJongmokName
             globalJongmokName = main_ui.tableWidget.item(row, 4).text()
         
-        startDate = datetime.now()
-        endDate = startDate - timedelta(days=5)
+        startDate = datetime.now() - timedelta(days=4)
+        endDate = datetime.now()
         startDate = startDate.strftime("%Y%m%d")
         endDate = endDate.strftime("%Y%m%d")
 
@@ -87,7 +86,7 @@ class indiWindow(QMainWindow):
         ret = giJongmokTRShow.SetSingleData(0, jongmokCode) # 종목코드
         ret = giJongmokTRShow.SetSingleData(1, startDate) # 시작일
         ret = giJongmokTRShow.SetSingleData(2, endDate) # 종료일
-        ret = giJongmokTRShow.SetSingleData(3, "3") # 조회구분
+        ret = giJongmokTRShow.SetSingleData(3, "0") # 조회구분
         ret = giJongmokTRShow.SetSingleData(3, "0") # 데이터 종류 구분 - 거래량
         rqid = giJongmokTRShow.RequestData()
         print(type(rqid))
@@ -334,7 +333,7 @@ class indiWindow(QMainWindow):
 
                 if 0 < percent_difference < 0.2:
                     print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n")
-                    message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.<br>"
+                    message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 <b>{percent_difference:.2f}%</b> 만큼 아래에 있습니다.<br>"
             
             if message == "":
                 print(f"[{globalJongmokName.strip()}] 특이사항이 없습니다.")
@@ -353,19 +352,30 @@ class indiWindow(QMainWindow):
 
             # 거래량 데이터 담기
             nCnt = giCtrl.GetMultiRowCount()
+            print(nCnt)
             message = ""
 
             for i in range(nCnt):
                 date = str(giCtrl.GetMultiData(i, 0)) # 일자
-                totalVolume = str(giCtrl.GetMultiData(i, 7)) # 누적거래량
-                foreignVolume = str(giCtrl.GetMultiData(i, 14)) # 외국인매수거래량
-                institutionalVolume = str(giCtrl.GetMultiData(i, 20)) # 기관매수거래량
+                totalVolume = int(giCtrl.GetMultiData(i, 7)) # 누적거래량
+                foreignVolume = int(giCtrl.GetMultiData(i, 14)) # 외국인매수거래량
+                institutionalVolume = int(giCtrl.GetMultiData(i, 20)) # 기관매수거래량
 
-                foreignPercentage = foreignVolume / totalVolume * 100
-                institutionalPercentage = institutionalVolume / totalVolume * 100
+                print(date, totalVolume, foreignVolume, institutionalVolume)
 
-                print(f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage}%, 기관매수거래량이 {institutionalPercentage}%입니다.")
-                message += f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage}%, 기관매수거래량이 {institutionalPercentage}%입니다.\n"
+                if totalVolume == 0:
+                    foreignPercentage = 0
+                    institutionalPercentage = 0
+                else:
+                    foreignPercentage = foreignVolume / totalVolume * 100
+                    institutionalPercentage = institutionalVolume / totalVolume * 100
+
+                print(f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage:.2f}%, 기관매수거래량이 {institutionalPercentage:.2f}%입니다.\n")
+
+                if foreignPercentage >= 19 and institutionalPercentage >= 19:
+                    message += f"<b>[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage:.2f}%, 기관매수거래량이 {institutionalPercentage:.2f}%입니다.</b><br>"
+                else:
+                    message += f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage:.2f}%, 기관매수거래량이 {institutionalPercentage:.2f}%입니다.<br>"
             
             html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
                                 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
