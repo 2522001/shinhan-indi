@@ -132,7 +132,6 @@ class indiWindow(QMainWindow):
         print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
         TR_Name = self.rqidD[rqid]
         
-
         # 코스피 시장 내 시가 총액 규모 상위 200위권 내 종목
 
         print("TR_name : ",TR_Name)
@@ -283,11 +282,6 @@ class indiWindow(QMainWindow):
 
             # 이동평균선을 활용한 종목 검사
 
-            global analysis1
-            global analysis2
-            analysis1 = 0
-            analysis2 = 0
-
             for sublist in MAList:
                 date = sublist[0]
                 currentLowPrice = sublist[1]
@@ -300,21 +294,21 @@ class indiWindow(QMainWindow):
                 if ma5 >= ma20 >= ma60 >= ma120:
                     print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.")
                     message = f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다."
-                    html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
-                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
-                                "p, li { white-space: pre-wrap; }\n"\
-                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
-                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
-
-                    main_ui.textBrowser_4_2.setHtml(html_content)
-                    analysis1 += 1
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
                 percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
                 if 0 < percent_difference < 0.2:
-                    print(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    analysis2 += 1
+                    print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
+                    message += f"\n[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다."
+
+            html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                                "p, li { white-space: pre-wrap; }\n"\
+                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+            main_ui.textBrowser_4_2.setHtml(html_content)
                     
 
             # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
