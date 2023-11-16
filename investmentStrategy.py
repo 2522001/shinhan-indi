@@ -103,8 +103,11 @@ class indiWindow(QMainWindow):
             capitalization = main_ui.tableWidget.item(row, 9).text()
             
             rowCount =  main_ui.tableWidget_5.rowCount()
-            print(f"현재 행의 개수: {rowCount}")
             main_ui.tableWidget_5.setRowCount(rowCount+1)
+
+            button = QPushButton("담기")
+            main_ui.tableWidget_5.setCellWidget(rowCount, 0, button)
+            button.clicked.connect(self.addToCartButton_clicked)
 
             main_ui.tableWidget_5.setItem(rowCount,1,QTableWidgetItem(jongmokCode)) # 종목코드
             main_ui.tableWidget_5.setItem(rowCount,2,QTableWidgetItem(jongmokName)) # 종목명
@@ -133,30 +136,39 @@ class indiWindow(QMainWindow):
 
                 previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
 
+                
+
+                button1 = QPushButton("담기")
+                main_ui.tableWidget.setCellWidget(i, 0, button1)
+                button1.clicked.connect(self.addToCartButton_clicked)
+
+                button2 = QPushButton("검사1")
+                main_ui.tableWidget.setCellWidget(i, 1, button2)
+                button2.clicked.connect(self.calculateMAButton_clicked)
+
+                button3 = QPushButton("검사2")
+                main_ui.tableWidget.setCellWidget(i, 2, button3)
+                # button3.clicked.connect(self.calculateVolumeButton_clicked)
+
+                main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
+                main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
+                main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
+                main_ui.tableWidget.setItem(i,6,QTableWidgetItem(previousDayChange)) # 전일대비구분
+                main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
+                main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
+                main_ui.tableWidget.setItem(i,9,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+
                 if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
 
-                    button1 = QPushButton("담기")
-                    main_ui.tableWidget.setCellWidget(i, 0, button1)
-                    button1.clicked.connect(self.addToCartButton_clicked)
+                    for col in range(main_ui.tableWidget.columnCount()):
+                        item = main_ui.tableWidget.item(i, col)
+                        if item is not None:
+                            item.setBackground(QColor(173, 216, 230))
 
-                    button2 = QPushButton("검사1")
-                    main_ui.tableWidget.setCellWidget(i, 1, button2)
-                    button2.clicked.connect(self.calculateMAButton_clicked)
-
-                    button3 = QPushButton("검사3")
-                    main_ui.tableWidget.setCellWidget(i, 2, button3)
-                    # button3.clicked.connect(self.calculateVolumeButton_clicked)
-
-                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
-                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
-                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(previousDayChange)) # 전일대비구분
-                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
-                    main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
-                    main_ui.tableWidget.setItem(i,9,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
-
-                    for j in range(3,10):
-                        tr_data_output[i].append(giCtrl.GetMultiData(i, j))
+                for j in range(3,10):
+                    tr_data_output[i].append(giCtrl.GetMultiData(i, j))
+                    
+                    
             
 
         if TR_Name == "SABA200QB":
