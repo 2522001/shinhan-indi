@@ -180,15 +180,14 @@ class indiWindow(QMainWindow):
                 for j in range(3,10):
                     tr_data_output[i].append(giCtrl.GetMultiData(i, j))
                     
-                    
-            
-
         if TR_Name == "SABA200QB":
             totalProfit_output = []
             totalProfit = 0
             nCnt = giCtrl.GetMultiRowCount()
             print("c")
             for i in range(0, nCnt):
+                main_ui.tableWidget_2.setRowCount(nCnt)
+
                 main_ui.tableWidget_2.setItem(i,0,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
                 main_ui.tableWidget_2.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
                 main_ui.tableWidget_2.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 결제일잔고수량
