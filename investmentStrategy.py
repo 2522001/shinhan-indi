@@ -86,6 +86,33 @@ class indiWindow(QMainWindow):
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name    
+
+    # 장바구니 담기
+
+    def addToCartButton_clicked(self):
+        button = self.sender()
+        index = main_ui.tableWidget.indexAt(button.pos())
+        if index.isValid():
+            row = index.row()
+            jongmokCode = main_ui.tableWidget.item(row, 3).text()
+            jongmokName = main_ui.tableWidget.item(row, 4).text()
+            price = main_ui.tableWidget.item(row, 5).text()
+            previousDayChange1 = main_ui.tableWidget.item(row, 6).text() # 전일대비구분
+            previousDayChange2 = main_ui.tableWidget.item(row, 7).text() # 전일대비
+            previousDayChange3 = main_ui.tableWidget.item(row, 8).text() # 전일대비율
+            capitalization = main_ui.tableWidget.item(row, 9).text()
+            
+            rowCount =  main_ui.tableWidget_5.rowCount()
+            print(f"현재 행의 개수: {rowCount}")
+            main_ui.tableWidget_5.setRowCount(rowCount+1)
+
+            main_ui.tableWidget_5.setItem(rowCount,1,QTableWidgetItem(jongmokCode)) # 종목코드
+            main_ui.tableWidget_5.setItem(rowCount,2,QTableWidgetItem(jongmokName)) # 종목명
+            main_ui.tableWidget_5.setItem(rowCount,3,QTableWidgetItem(price)) # 현재가
+            main_ui.tableWidget_5.setItem(rowCount,4,QTableWidgetItem(previousDayChange1)) # 전일대비구분
+            main_ui.tableWidget_5.setItem(rowCount,5,QTableWidgetItem(previousDayChange2)) # 전일대비
+            main_ui.tableWidget_5.setItem(rowCount,6,QTableWidgetItem(previousDayChange3)) # 전일대비율
+            main_ui.tableWidget_5.setItem(rowCount,7,QTableWidgetItem(capitalization)) # 시가총액비중
     
         
     def giJongmokTRShow_ReceiveData(self,giCtrl,rqid):
@@ -110,7 +137,7 @@ class indiWindow(QMainWindow):
 
                     button1 = QPushButton("담기")
                     main_ui.tableWidget.setCellWidget(i, 0, button1)
-                    # button1.clicked.connect(self.calculateMAButton_clicked)
+                    button1.clicked.connect(self.addToCartButton_clicked)
 
                     button2 = QPushButton("검사1")
                     main_ui.tableWidget.setCellWidget(i, 1, button2)

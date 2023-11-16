@@ -150,7 +150,7 @@ class Ui_MainWindow(object):
         self.tableWidget_5.setGeometry(QtCore.QRect(30, 70, 391, 221))
         self.tableWidget_5.setObjectName("tableWidget_5")
         self.tableWidget_5.setColumnCount(8)
-        self.tableWidget_5.setRowCount(10)
+        self.tableWidget_5.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_5.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
