@@ -111,9 +111,20 @@ class indiWindow(QMainWindow):
 
     def calculateMAButton_clicked(self):
         print("검사1 시작")
-        TR_Name = "TR_1843_S"          
+        TR_Name = "TR_1843_S" 
+
+        button = self.sender()  # 클릭된 버튼 가져오기
+        index = main_ui.tableWidget.indexAt(button.pos())  # 클릭된 버튼의 행 및 열 인덱스 가져오기
+        if index.isValid():
+            row = index.row()
+            # 클릭된 행에 대한 데이터에 액세스하고 필요한 작업 수행
+            jongmokCode = main_ui.tableWidget.item(row, 1).text()
+            # jongmokCode 또는 다른 데이터를 사용하여 필요한 작업 수행
+
+        print(jongmokCode)
+
         ret = giCalculateMATRShow.SetQueryName(TR_Name)          
-        ret = giCalculateMATRShow.SetSingleData(0, "005930")  # 종목코드
+        ret = giCalculateMATRShow.SetSingleData(0, jongmokCode)  # 종목코드
         ret = giCalculateMATRShow.SetSingleData(1, "125")  # 조회갯수
         rqid = giCalculateMATRShow.RequestData()
         print(type(rqid))
