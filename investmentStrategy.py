@@ -235,21 +235,24 @@ class indiWindow(QMainWindow):
 
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
-                    print(f"{date}: 5일선>=20일선>=60일선>=120일선")
+                    print(f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다.")
                     # item = f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다."
-                    # self.listWidget_4.addItem(item)
-                    main_ui.listWidget_4.setItem(1,QListWidgetItem(f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다."))
+                    # test = "검사1-1 통과 이동평균선이 정배열된 양지차트입니다."
+                    # print(type(test))
+                    # main_ui.listWidget_4.addItem(QListWidegetItem(str(test)))
+                    print("여기도됨")
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
                 percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
                 if 0 < percent_difference < 0.2:
-                    print(f"{date}: 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    item = QListWidgetItem(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    self.listWidget_4.addItem(item)
+                    print(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
+                    #item = QListWidgetItem(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
 
             # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
             print("검사1 종료")
+
+            
 
         if TR_Name == "SABA101U1":
             print("매수/매도")
