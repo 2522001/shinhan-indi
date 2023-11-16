@@ -105,9 +105,9 @@ class indiWindow(QMainWindow):
             rowCount =  main_ui.tableWidget_5.rowCount()
             main_ui.tableWidget_5.setRowCount(rowCount+1)
 
-            button = QPushButton("담기")
+            button = QPushButton("매수")
             main_ui.tableWidget_5.setCellWidget(rowCount, 0, button)
-            button.clicked.connect(self.addToCartButton_clicked)
+            button.clicked.connect(self.setJongmokCodeButton_clicked)
 
             main_ui.tableWidget_5.setItem(rowCount,1,QTableWidgetItem(jongmokCode)) # 종목코드
             main_ui.tableWidget_5.setItem(rowCount,2,QTableWidgetItem(jongmokName)) # 종목명
@@ -116,8 +116,17 @@ class indiWindow(QMainWindow):
             main_ui.tableWidget_5.setItem(rowCount,5,QTableWidgetItem(previousDayChange2)) # 전일대비
             main_ui.tableWidget_5.setItem(rowCount,6,QTableWidgetItem(previousDayChange3)) # 전일대비율
             main_ui.tableWidget_5.setItem(rowCount,7,QTableWidgetItem(capitalization)) # 시가총액비중
-    
-        
+
+    # 종목코드 셋팅
+
+    def setJongmokCodeButton_clicked(self):
+        button = self.sender()
+        index = main_ui.tableWidget.indexAt(button.pos())
+        if index.isValid():
+            row = index.row()
+            jongmokCode = main_ui.tableWidget.item(row, 3).text()
+            main_ui.lineEdit_3_3.setText("A" + jongmokCode)
+
     def giJongmokTRShow_ReceiveData(self,giCtrl,rqid):
         print("in receive_Data:",rqid)
         print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
@@ -135,8 +144,6 @@ class indiWindow(QMainWindow):
                 tr_data_output.append([])
 
                 previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
-
-                
 
                 button1 = QPushButton("담기")
                 main_ui.tableWidget.setCellWidget(i, 0, button1)
