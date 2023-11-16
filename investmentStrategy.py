@@ -222,19 +222,19 @@ class indiWindow(QMainWindow):
                 main_ui.tableWidget_2.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 6)))) # 평균단가
 
                 try:
-                    profitRate = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) / float(giCtrl.GetMultiData(i, 6)) * 100)
+                    profitRate = str(int((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) / float(giCtrl.GetMultiData(i, 6)) * 100)) + "%"
                 except ZeroDivisionError:
                     profitRate = "0"
-                main_ui.tableWidget_2.setItem(i,5,QTableWidgetItem(str(profitRate))) # 수익률 ((현재가-평균단가)/평균단가*100)
+                main_ui.tableWidget_2.setItem(i,5,QTableWidgetItem(profitRate)) # 수익률 ((현재가-평균단가)/평균단가*100)
 
                 try:
-                    profit = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) * float(giCtrl.GetMultiData(i, 2)))
+                    profit = str(int((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) * float(giCtrl.GetMultiData(i, 2))))
                 except ValueError:
                     profit = "0"
                     
                 totalProfit_output.append(profit)
                 print(totalProfit_output)
-                main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(str(profit))) # 수익 ((현재가-평균단가)*결제일잔고수량)
+                main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(profit)) # 수익 ((현재가-평균단가)*결제일잔고수량)
 
                 main_ui.tableWidget_2.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 3)))) # 매도미체결수량
                 main_ui.tableWidget_2.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 매수미체결수량
