@@ -158,12 +158,17 @@ class indiWindow(QMainWindow):
                 main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
                 main_ui.tableWidget.setItem(i,9,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
 
-                if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
-
+                if previousDayChange == "2": # 상승
                     for col in range(main_ui.tableWidget.columnCount()):
                         item = main_ui.tableWidget.item(i, col)
                         if item is not None:
-                            item.setBackground(QColor(173, 216, 230))
+                            item.setBackground(QColor(255, 194, 205))
+
+                elif previousDayChange == "3": #보합
+                    for col in range(main_ui.tableWidget.columnCount()):
+                        item = main_ui.tableWidget.item(i, col)
+                        if item is not None:
+                            item.setBackground(QColor(255, 250, 205))
 
                 for j in range(3,10):
                     tr_data_output[i].append(giCtrl.GetMultiData(i, j))
