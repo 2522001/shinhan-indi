@@ -128,7 +128,20 @@ class Ui_MainWindow(object):
         self.groupBox_4.setGeometry(QtCore.QRect(690, 50, 451, 241))
         self.groupBox_4.setObjectName("groupBox_4")
 
-    
+        self.listWidget_4 = QtWidgets.QListWidget(self.groupBox_4)
+        self.listWidget_4.setGeometry(QtCore.QRect(30, 30, 391, 181))
+        self.listWidget_4.setWordWrap(True)
+        self.listWidget_4.setObjectName("listWidget_4")
+        item = QtWidgets.QListWidgetItem("반갑습니다!")
+        self.listWidget_4.addItem(item)
+        item = QtWidgets.QListWidgetItem("종목 추천 지표는 다음과 같습니다.")                                     
+        self.listWidget_4.addItem(item)
+        item = QtWidgets.QListWidgetItem("1. 코스피 시장 내 시가 총액 규모 상위 200위권 내 종목")
+        self.listWidget_4.addItem(item)
+        item = QtWidgets.QListWidgetItem("2. 이동평균선이 모이면서 20일 선이 주가 한 발 아래인 종목")
+        self.listWidget_4.addItem(item)
+        item = QtWidgets.QListWidgetItem("3. 2~3일 연속 기관 및 외국인 매수량이 전체 거래량의 20% 이상인 종목")
+        self.listWidget_4.addItem(item)
 
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(690, 500, 451, 321))
@@ -192,21 +205,6 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "추천 종목을 조회합니다."))
         self.pushButton.setText(_translate("MainWindow", "조회"))
         self.groupBox_4.setTitle(_translate("MainWindow", "알림창"))
-        self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">반갑습니다!</p></body></html>"))
-        self.textBrowser_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">검사1 결과가 이곳에 표시됩니다.</p></body></html>"))
-        self.textBrowser_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">검사2 결과가 이곳에 표시됩니다.</p></body></html>"))
         self.groupBox_5.setTitle(_translate("MainWindow", "장바구니"))
         self.label_5.setText(_translate("MainWindow", "매수할 종목을 누르면 상단 주문에 종목코드가 입력됩니다."))
 
