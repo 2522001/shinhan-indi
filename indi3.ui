@@ -115,13 +115,124 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>50</y>
+      <width>591</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>오늘의 종목</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>추천 종목을 조회해보세요.</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>조회</string>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>70</y>
+       <width>531</width>
+       <height>241</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>50</y>
+      <width>451</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>알림창</string>
+    </property>
+    <widget class="QListWidget" name="listWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>391</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>500</y>
+      <width>451</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>장바구니</string>
+    </property>
+    <widget class="QTableWidget" name="tableWidget_5">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>70</y>
+       <width>391</width>
+       <height>221</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>321</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>매수할 종목을 누르면 하단 주문에 종목코드가 입력됩니다.</string>
+     </property>
+    </widget>
+   </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>420</y>
+      <y>320</y>
       <width>451</width>
-      <height>191</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -183,7 +294,7 @@
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>130</y>
+       <y>100</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -196,7 +307,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>130</y>
+       <y>100</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -216,114 +327,6 @@
      </property>
      <property name="text">
       <string>종목코드</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>50</y>
-      <width>591</width>
-      <height>341</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>오늘의 종목</string>
-    </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>30</y>
-       <width>211</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>추천 종목을 조회해보세요.</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>30</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>조회</string>
-     </property>
-    </widget>
-    <widget class="QTableWidget" name="tableWidget">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>70</y>
-       <width>531</width>
-       <height>241</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_4">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>630</y>
-      <width>451</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>알림창</string>
-    </property>
-    <widget class="QListWidget" name="listWidget_4">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>30</y>
-       <width>381</width>
-       <height>131</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_5">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>50</y>
-      <width>451</width>
-      <height>341</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>장바구니</string>
-    </property>
-    <widget class="QTableWidget" name="tableWidget_5">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>70</y>
-       <width>391</width>
-       <height>241</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>30</y>
-       <width>321</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>매수할 종목을 누르면 하단 주문에 종목코드가 입력됩니다.</string>
      </property>
     </widget>
    </widget>

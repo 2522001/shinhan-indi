@@ -32,11 +32,11 @@ class indiWindow(QMainWindow):
         main_ui.pushButton_2.clicked.connect(self.portfolioQueryButton_clicked)
         main_ui.pushButton_3_1.clicked.connect(self.buyButton_clicked)
         # main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
-        main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
-        main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
+        #main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
+        #main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
         giTradingTRShow.SetCallBack('ReceiveData', self.giTradingTRShow_ReceiveData)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
-        giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
+        #giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
@@ -239,7 +239,7 @@ class indiWindow(QMainWindow):
                 ma120 = sublist[5]
 
                 # 각 날짜에 대해 이동평균선 조건 확인
-                if ma5 >= ma20 >= ma60:
+                if ma5 >= ma20 >= ma60 >= ma120:
                     print(f"{date}: 5일선>=20일선>=60일선>=120일선")
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
@@ -315,23 +315,23 @@ class indiWindow(QMainWindow):
 
     # 시세 조회
 
-    def JongmokRealTimeQueryButton_clicked(self):      
-        jongmokCode = main_ui.lineEdit_5.text()
-        rqid = giJongmokRealTime.RequestRTReg("SC",jongmokCode)
-        print(type(rqid))
-        print('Request Data rqid: ' + str(rqid))
+    # def JongmokRealTimeQueryButton_clicked(self):      
+    #     jongmokCode = main_ui.lineEdit_5.text()
+    #     rqid = giJongmokRealTime.RequestRTReg("SC",jongmokCode)
+    #     print(type(rqid))
+    #     print('Request Data rqid: ' + str(rqid))
 
-    def giJongmokRealTime_ReceiveRTData(self,giCtrl,RealType):
-        if RealType == "SC":
-            main_ui.tableWidget_5.insertRow(main_ui.tableWidget_5.rowCount())
-            final_rowCount = main_ui.tableWidget_5.rowCount() - 1
-            main_ui.tableWidget_5.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
-            main_ui.tableWidget_5.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
-            main_ui.tableWidget_5.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
-            main_ui.tableWidget_5.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
+    # def giJongmokRealTime_ReceiveRTData(self,giCtrl,RealType):
+    #     if RealType == "SC":
+    #         main_ui.tableWidget_5.insertRow(main_ui.tableWidget_5.rowCount())
+    #         final_rowCount = main_ui.tableWidget_5.rowCount() - 1
+    #         main_ui.tableWidget_5.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
 
-    def JongmokRealTimeStopButton_clicked(self):
-        giJongmokRealTime.UnRequestRTReg("SC", "")
+    # def JongmokRealTimeStopButton_clicked(self):
+    #     giJongmokRealTime.UnRequestRTReg("SC", "")
 
 
 if __name__ == "__main__":
