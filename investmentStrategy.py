@@ -323,15 +323,18 @@ class indiWindow(QMainWindow):
 
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
-                    print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.")
+                    print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.\n")
                     message += f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.<br>"
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
-                # percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
+                if currentLowPrice == 0:
+                    percent_difference = 0
+                else:
+                    percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
-                # if 0 < percent_difference < 0.2:
-                #     print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                #     message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n"
+                if 0 < percent_difference < 0.2:
+                    print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n")
+                    message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.<br>"
             
             if message == "":
                 print(f"[{globalJongmokName.strip()}] 특이사항이 없습니다.")
