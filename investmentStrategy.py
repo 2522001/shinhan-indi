@@ -268,6 +268,7 @@ class indiWindow(QMainWindow):
             # 종가 데이터 담기
 
             nCnt = giCtrl.GetMultiRowCount()
+            message = ""
 
             jongmokClosingPriceDate = []
             jongmokLowPrice = []
