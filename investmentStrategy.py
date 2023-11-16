@@ -298,8 +298,15 @@ class indiWindow(QMainWindow):
 
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
-                    print(f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다.")
-                    # main_ui.listWidget_4.addItem(QListWidegetItem(str(test)))
+                    print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.")
+                    message = f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다."
+                    html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                                "p, li { white-space: pre-wrap; }\n"\
+                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+                    main_ui.textBrowser_4_2.setHtml(html_content)
                     analysis1 += 1
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
