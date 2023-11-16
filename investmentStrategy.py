@@ -197,9 +197,9 @@ class indiWindow(QMainWindow):
 
             for i in range(nCnt):
                 date = str(giCtrl.GetMultiData(i, 0)) # 일자
-                closingPrice = str(giCtrl.GetMultiData(i, 5)) # 종가
+                closingPrice = str(giCtrl.GetMultiData(i, 4)) # 종가
                 jongmokClosingPriceDate.append(date)
-                jongmokClosingPrice.append(float(closingPrice))
+                jongmokClosingPrice.append(int(closingPrice))
 
             print(jongmokClosingPriceDate)
             print(len(jongmokClosingPrice))
@@ -213,18 +213,16 @@ class indiWindow(QMainWindow):
             for i in range(5):
                 sublist = []
                 sublist.append(jongmokClosingPriceDate[index])  # 날짜
-                sublist.append(float(jongmokClosingPrice[index]))  # 현재가
-                print("여기까지 잘됨")
+                sublist.append(jongmokClosingPrice[index])  # 현재가
+
                 for interval in movingAverages:
-                    # 지정된 간격에 대한 요소가 jongmokClosingPrice에 충분한지 확인
                     if index + interval <= len(jongmokClosingPrice):
-                        print("계산좀해줘")
                         print(f"index: {index}, interval: {interval}, sublist: {jongmokClosingPrice[index:index+interval]}")
                         # 현재 날짜부터 지정된 간격 동안의 종가를 추출하여 이동평균 계산
                         average = sum(jongmokClosingPrice[index:index+interval]) / interval
-                        sublist.append(average)
+                        sublist.append(int(average))
                     else:
-                        sublist.append(None)  # 해당 간격에 대한 충분한 데이터가 없는 경우 처리
+                        sublist.append(None) # 충분한 데이터가 없는 경우 처리
                 MAList.append(sublist)
                 index += 1
 
