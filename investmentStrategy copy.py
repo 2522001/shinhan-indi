@@ -8,6 +8,8 @@ import GiExpertControl as giLogin
 import GiExpertControl as giTradingTRShow
 import GiExpertControl as giJongmokTRShow
 import GiExpertControl as giJongmokRealTime
+import GiExpertControl as giJongmokRecommendTRShow # 종목 추천
+import GiExpertControl as giCalculateMATRShow # 이동평균선 계산
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -25,6 +27,10 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
         giJongmokRealTime.RunIndiPython()
+        giJongmokRecommendTRShow.SetQtMode(True)
+        giJongmokRecommendTRShow.RunIndiPython()
+        giCalculateMATRShow.SetQtMode(True)
+        giCalculateMATRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -37,6 +43,8 @@ class indiWindow(QMainWindow):
         giTradingTRShow.SetCallBack('ReceiveData', self.giTradingTRShow_ReceiveData)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
         giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
+        giJongmokRecommendTRShow.SetCallBack('ReceiveData', self.giJongmokRecommendTRShow_ReceiveData)
+        # giCalculateMATRShow.SetCallBack('ReceiveData', self.giCalculateTRShow_ReceiveData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
@@ -53,13 +61,52 @@ class indiWindow(QMainWindow):
 
     def jongmokRecommendButton_clicked(self):
         TR_Name = "TR_1856_IND"          
-        ret = giJongmokTRShow.SetQueryName(TR_Name)          
-        ret = giJongmokTRShow.SetSingleData(0,"0") # 장구분 - 코스피
-        ret = giJongmokTRShow.SetSingleData(1,"200") # 조회갯수 - 200개
-        rqid = giJongmokTRShow.RequestData()
+        ret = giJongmokRecommendTRShow.SetQueryName(TR_Name)          
+        ret = giJongmokRecommendTRShow.SetSingleData(0,"0") # 장구분 - 코스피
+        ret = giJongmokRecommendTRShow.SetSingleData(1,"200") # 조회갯수 - 200개
+        rqid = giJongmokRecommendTRShow.RequestData()
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
+
+    def giJongmokRecommendTRShow_ReceiveData(self,giCtrl,rqid):
+        print("in receive_Data:",rqid)
+        print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
+        TR_Name = self.rqidD[rqid]
+        tr_data_output = []
+        output = []
+
+        # 코스피 시장 내 시가 총액 규모 상위 200위권 내 종목
+
+        print("TR_name : ",TR_Name)
+        if TR_Name == "TR_1856_IND":
+            nCnt = giCtrl.GetMultiRowCount()
+            print("c")
+            for i in range(0, nCnt):
+                tr_data_output.append([])
+
+                previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
+
+                if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
+
+                    button = QPushButton("담기")
+                    main_ui.tableWidget.setCellWidget(i, 0, button)
+                    button.clicked.connect(self.calculateMAButton_clicked)
+
+                    main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
+                    main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
+                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
+                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(previousDayChange)) # 전일대비구분
+                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
+                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
+                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+
+                    for j in range(1,8):
+                        tr_data_output[i].append(giCtrl.GetMultiData(i, j))
+            # print(type(tr_data_output))
+            # print(tr_data_output)
+
+    # 종목 추천 - 검사1 : 이동평균선
 
     def calculateMAButton_clicked(self):
         print("검사1 시작")
@@ -74,10 +121,10 @@ class indiWindow(QMainWindow):
         
         print("종목코드: ", jongmokCode)
 
-        ret = giJongmokTRShow.SetQueryName(TR_Name)          
-        ret = giJongmokTRShow.SetSingleData(0, jongmokCode)  # 종목코드
-        ret = giJongmokTRShow.SetSingleData(1, "125")  # 조회갯수
-        rqid = giJongmokTRShow.RequestData()
+        ret = giCalculateMATRShow.SetQueryName(TR_Name)          
+        ret = giCalculateMATRShow.SetSingleData(0, jongmokCode)  # 종목코드
+        ret = giCalculateMATRShow.SetSingleData(1, "125")  # 조회갯수
+        rqid = giCalculateMATRShow.RequestData()
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
@@ -115,31 +162,7 @@ class indiWindow(QMainWindow):
         totalProfit_output = []
         totalProfit = 0
 
-        if TR_Name == "TR_1856_IND":
-            nCnt = giCtrl.GetMultiRowCount()
-            print("c")
-            for i in range(0, nCnt):
-                tr_data_output.append([])
-
-                previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
-
-                if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
-
-                    button = QPushButton("담기")
-                    main_ui.tableWidget.setCellWidget(i, 0, button)
-                    button.clicked.connect(self.calculateMAButton_clicked)
-
-                    main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
-                    main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
-                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(previousDayChange)) # 전일대비구분
-                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
-                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
-                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
-
-                    for j in range(1,8):
-                        tr_data_output[i].append(giCtrl.GetMultiData(i, j))
-
+        print("TR_name : ",TR_Name)
         if TR_Name == "SABA200QB":
             nCnt = giCtrl.GetMultiRowCount()
             print("c")
@@ -235,17 +258,6 @@ class indiWindow(QMainWindow):
             new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
 
     # 매도
-
-
-
-
-
-
-
-
-
-
-
 
     # 시세 조회
 
