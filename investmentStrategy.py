@@ -50,9 +50,9 @@ class indiWindow(QMainWindow):
         index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
             row = index.row()
-            jongmokCode = main_ui.tableWidget.item(row, 2).text()
+            jongmokCode = main_ui.tableWidget.item(row, 3).text()
             global globalJongmokName
-            globalJongmokName = main_ui.tableWidget.item(row, 3).text()
+            globalJongmokName = main_ui.tableWidget.item(row, 4).text()
         
         print("종목코드: ", jongmokCode)
 
@@ -115,17 +115,20 @@ class indiWindow(QMainWindow):
                     button2 = QPushButton("검사1")
                     main_ui.tableWidget.setCellWidget(i, 1, button2)
                     button2.clicked.connect(self.calculateMAButton_clicked)
-                    # button2.clicked.connect(self.calculateVolumeButton_clicked)
 
-                    main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
-                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
-                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(previousDayChange)) # 전일대비구분
-                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
-                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
-                    main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+                    button3 = QPushButton("검사3")
+                    main_ui.tableWidget.setCellWidget(i, 2, button3)
+                    # button3.clicked.connect(self.calculateVolumeButton_clicked)
 
-                    for j in range(2,9):
+                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
+                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
+                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
+                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(previousDayChange)) # 전일대비구분
+                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
+                    main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
+                    main_ui.tableWidget.setItem(i,9,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+
+                    for j in range(3,10):
                         tr_data_output[i].append(giCtrl.GetMultiData(i, j))
             
 
