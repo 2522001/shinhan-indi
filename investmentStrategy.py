@@ -35,7 +35,7 @@ class indiWindow(QMainWindow):
     def jongmokRecommendButton_clicked(self):
         TR_Name = "TR_1856_IND"          
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
-        ret = giJongmokTRShow.SetSingleData(0,"0") # 장구분 - 코스피
+        ret = giJongmokTRShow.SetSingleData(0,"2") # 장구분 - 전체
         ret = giJongmokTRShow.SetSingleData(1,"200") # 조회갯수 - 200개
         rqid = giJongmokTRShow.RequestData()
         print(type(rqid))
@@ -161,7 +161,7 @@ class indiWindow(QMainWindow):
         print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
         TR_Name = self.rqidD[rqid]
         
-        # 코스피 시장 내 시가 총액 규모 상위 200위권 내 종목
+        # 시가 총액 규모 상위 200위권 내 종목
 
         print("TR_name : ",TR_Name)
         if TR_Name == "TR_1856_IND":
@@ -350,7 +350,7 @@ class indiWindow(QMainWindow):
                 totalVolume = str(giCtrl.GetMultiData(i, 7)) # 누적거래량
                 foreignVolume = str(giCtrl.GetMultiData(i, 14)) # 외국인매수거래량
                 institutionalVolume = str(giCtrl.GetMultiData(i, 20)) # 기관매수거래량
-                
+
                 foreignPercentage = foreignVolume / totalVolume * 100
                 institutionalPercentage = institutionalVolume / totalVolume * 100
 
