@@ -76,7 +76,7 @@ class indiWindow(QMainWindow):
 
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
         ret = giJongmokTRShow.SetSingleData(0, jongmokCode)  # 종목코드
-        ret = giJongmokTRShow.SetSingleData(1, "125")  # 조회갯수
+        ret = giJongmokTRShow.SetSingleData(1, "130")  # 조회갯수
         rqid = giJongmokTRShow.RequestData()
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
@@ -199,27 +199,36 @@ class indiWindow(QMainWindow):
                 date = str(giCtrl.GetMultiData(i, 0)) # 일자
                 closingPrice = str(giCtrl.GetMultiData(i, 5)) # 종가
                 jongmokClosingPriceDate.append(date)
-                jongmokClosingPrice.append(closingPrice)
+                jongmokClosingPrice.append(float(closingPrice))
 
-            print(jongmokClosingPrice)
+            print(jongmokClosingPriceDate)
+            print(len(jongmokClosingPrice))
 
-            # # 이동평균선 구하기
+            # 이동평균선 구하기
 
-            # movingAverages = [5, 20, 60, 120]
-            # MAList = [] # [[날짜, 현재가, 5일선, 20일선, 60일선, 120일선], ...]
-            # index = 1
+            movingAverages = [5, 20, 60, 120]
+            MAList = [] # [[날짜, 현재가, 5일선, 20일선, 60일선, 120일선], ...]
+            index = 0
 
-            # for i in range(5):
-            #     sublist = []
-            #     sublist.append(date[-index])  # 날짜
-            #     sublist.append(jongmokClosingPrice[-index])  # 현재가
-            #     for interval in movingAverages:
-            #         average = sum(jongmokClosingPrice[-interval:]) / interval
-            #         sublist.append(average)
-            #     MAList.append(sublist)
-            #     index += 1
+            for i in range(5):
+                sublist = []
+                sublist.append(jongmokClosingPriceDate[index])  # 날짜
+                sublist.append(float(jongmokClosingPrice[index]))  # 현재가
+                print("여기까지 잘됨")
+                for interval in movingAverages:
+                    # 지정된 간격에 대한 요소가 jongmokClosingPrice에 충분한지 확인
+                    if index + interval <= len(jongmokClosingPrice):
+                        print("계산좀해줘")
+                        print(f"index: {index}, interval: {interval}, sublist: {jongmokClosingPrice[index:index+interval]}")
+                        # 현재 날짜부터 지정된 간격 동안의 종가를 추출하여 이동평균 계산
+                        average = sum(jongmokClosingPrice[index:index+interval]) / interval
+                        sublist.append(average)
+                    else:
+                        sublist.append(None)  # 해당 간격에 대한 충분한 데이터가 없는 경우 처리
+                MAList.append(sublist)
+                index += 1
 
-            # print(MAList)
+            print(MAList)
 
             # # 이동평균선을 활용한 종목 검사
 
