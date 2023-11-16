@@ -321,14 +321,14 @@ class indiWindow(QMainWindow):
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
                     print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.")
-                    message = f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다."
+                    message = f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.\n"
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
                 percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
                 if 0 < percent_difference < 0.2:
                     print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    message += f"\n[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다."
+                    message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n"
 
             html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
                                 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
@@ -343,18 +343,28 @@ class indiWindow(QMainWindow):
 
             # 거래량 데이터 담기
             nCnt = giCtrl.GetMultiRowCount()
-
-            volumeList = []
+            message = ""
 
             for i in range(nCnt):
                 date = str(giCtrl.GetMultiData(i, 0)) # 일자
-                volume = str(giCtrl.GetMultiData(i, 7)) # 누적거래량
+                totalVolume = str(giCtrl.GetMultiData(i, 7)) # 누적거래량
                 foreignVolume = str(giCtrl.GetMultiData(i, 14)) # 외국인매수거래량
                 institutionalVolume = str(giCtrl.GetMultiData(i, 20)) # 기관매수거래량
-                volumeList.append([date, volume, foreignVolume, institutionalVolume])
+                
+                foreignPercentage = foreignVolume / totalVolume * 100
+                institutionalPercentage = institutionalVolume / totalVolume * 100
 
-            # 외국인매수거래량이 누적거래량의 20% 이상
-             
+                print(f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage}%, 기관매수거래량이 {institutionalPercentage}%입니다.")
+                message += f"[{globalJongmokName.strip()}] {date} 누적거래량 중 외국인매수거래량이 {foreignPercentage}%, 기관매수거래량이 {institutionalPercentage}%입니다.\n"
+            
+            html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                                "p, li { white-space: pre-wrap; }\n"\
+                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+            main_ui.textBrowser_4_3.setHtml(html_content)
+            print("검사2 종료")
 
         if TR_Name == "SABA101U1":
             print("매수/매도")
