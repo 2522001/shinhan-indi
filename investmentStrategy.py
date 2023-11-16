@@ -264,7 +264,6 @@ class indiWindow(QMainWindow):
             main_ui.progressBar_2.setProperty("value", targetProfitProgress)
 
         if TR_Name == "TR_1843_S":
-            print("[TR_1843_S] 검사1 시작")
 
             # 종가 데이터 담기
 
@@ -339,6 +338,22 @@ class indiWindow(QMainWindow):
 
             main_ui.textBrowser_4_2.setHtml(html_content)
             print("검사1 종료")
+
+        if TR_Name == "TR_1206":
+
+            # 거래량 데이터 담기
+            nCnt = giCtrl.GetMultiRowCount()
+
+            volumeList = []
+
+            for i in range(nCnt):
+                date = str(giCtrl.GetMultiData(i, 0)) # 일자
+                volume = str(giCtrl.GetMultiData(i, 7)) # 누적거래량
+                foreignVolume = str(giCtrl.GetMultiData(i, 14)) # 외국인매수거래량
+                institutionalVolume = str(giCtrl.GetMultiData(i, 20)) # 기관매수거래량
+                volumeList.append([date, volume, foreignVolume, institutionalVolume])
+
+            # 외국인매수거래량이 누적거래량의 20% 이상
              
 
         if TR_Name == "SABA101U1":
