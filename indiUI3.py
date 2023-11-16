@@ -61,15 +61,15 @@ class Ui_MainWindow(object):
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_4.setGeometry(QtCore.QRect(690, 50, 451, 241))
         self.groupBox_4.setObjectName("groupBox_4")
-        self.textBrowser = QtWidgets.QTextBrowser(self.groupBox_4)
-        self.textBrowser.setGeometry(QtCore.QRect(30, 30, 391, 31))
-        self.textBrowser.setObjectName("textBrowser")
-        self.textBrowser_2 = QtWidgets.QTextBrowser(self.groupBox_4)
-        self.textBrowser_2.setGeometry(QtCore.QRect(30, 80, 391, 61))
-        self.textBrowser_2.setObjectName("textBrowser_2")
-        self.textBrowser_3 = QtWidgets.QTextBrowser(self.groupBox_4)
-        self.textBrowser_3.setGeometry(QtCore.QRect(30, 150, 391, 61))
-        self.textBrowser_3.setObjectName("textBrowser_3")
+        self.textBrowser_4_1 = QtWidgets.QTextBrowser(self.groupBox_4)
+        self.textBrowser_4_1.setGeometry(QtCore.QRect(30, 30, 391, 31))
+        self.textBrowser_4_1.setObjectName("textBrowser_4_1")
+        self.textBrowser_4_2 = QtWidgets.QTextBrowser(self.groupBox_4)
+        self.textBrowser_4_2.setGeometry(QtCore.QRect(30, 80, 391, 61))
+        self.textBrowser_4_2.setObjectName("textBrowser_4_2")
+        self.textBrowser_4_3 = QtWidgets.QTextBrowser(self.groupBox_4)
+        self.textBrowser_4_3.setGeometry(QtCore.QRect(30, 150, 391, 61))
+        self.textBrowser_4_3.setObjectName("textBrowser_4_3")
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(690, 500, 451, 321))
         self.groupBox_5.setObjectName("groupBox_5")
@@ -130,17 +130,17 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "추천 종목을 조회해보세요."))
         self.pushButton.setText(_translate("MainWindow", "조회"))
         self.groupBox_4.setTitle(_translate("MainWindow", "알림창"))
-        self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textBrowser_4_1.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">반갑습니다!</p></body></html>"))
-        self.textBrowser_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textBrowser_4_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">검사1 결과가 이곳에 표시됩니다.</p></body></html>"))
-        self.textBrowser_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textBrowser_4_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"

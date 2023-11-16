@@ -176,7 +176,7 @@
     <property name="title">
      <string>알림창</string>
     </property>
-    <widget class="QTextBrowser" name="textBrowser">
+    <widget class="QTextBrowser" name="textBrowser_4_1">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -193,7 +193,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;반갑습니다!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="textBrowser_2">
+    <widget class="QTextBrowser" name="textBrowser_4_2">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -210,7 +210,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;검사1 결과가 이곳에 표시됩니다.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="textBrowser_3">
+    <widget class="QTextBrowser" name="textBrowser_4_3">
      <property name="geometry">
       <rect>
        <x>30</x>
