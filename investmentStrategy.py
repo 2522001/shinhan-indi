@@ -50,9 +50,9 @@ class indiWindow(QMainWindow):
         index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
             row = index.row()
-            jongmokCode = main_ui.tableWidget.item(row, 1).text()
+            jongmokCode = main_ui.tableWidget.item(row, 2).text()
             global globalJongmokName
-            globalJongmokName = main_ui.tableWidget.item(row, 2).text()
+            globalJongmokName = main_ui.tableWidget.item(row, 3).text()
         
         print("종목코드: ", jongmokCode)
 
@@ -108,19 +108,24 @@ class indiWindow(QMainWindow):
 
                 if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
 
-                    button = QPushButton("검사")
-                    main_ui.tableWidget.setCellWidget(i, 0, button)
-                    button.clicked.connect(self.calculateMAButton_clicked)
+                    button1 = QPushButton("담기")
+                    main_ui.tableWidget.setCellWidget(i, 0, button1)
+                    # button1.clicked.connect(self.calculateMAButton_clicked)
 
-                    main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
-                    main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
-                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
-                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(previousDayChange)) # 전일대비구분
-                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
-                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
-                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+                    button2 = QPushButton("검사1")
+                    main_ui.tableWidget.setCellWidget(i, 1, button2)
+                    button2.clicked.connect(self.calculateMAButton_clicked)
+                    # button2.clicked.connect(self.calculateVolumeButton_clicked)
 
-                    for j in range(1,8):
+                    main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
+                    main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
+                    main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
+                    main_ui.tableWidget.setItem(i,5,QTableWidgetItem(previousDayChange)) # 전일대비구분
+                    main_ui.tableWidget.setItem(i,6,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 전일대비
+                    main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 전일대비율
+                    main_ui.tableWidget.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
+
+                    for j in range(2,9):
                         tr_data_output[i].append(giCtrl.GetMultiData(i, j))
             
 
@@ -225,6 +230,11 @@ class indiWindow(QMainWindow):
 
             # 이동평균선을 활용한 종목 검사
 
+            global analysis1
+            global analysis2
+            analysis1 = 0
+            analysis2 = 0
+
             for sublist in MAList:
                 date = sublist[0]
                 currentLowPrice = sublist[1]
@@ -236,23 +246,21 @@ class indiWindow(QMainWindow):
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
                     print(f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다.")
-                    # item = f"{globalJongmokName} 검사1-1 통과 {date} 이동평균선이 정배열된 양지차트입니다."
-                    # test = "검사1-1 통과 이동평균선이 정배열된 양지차트입니다."
-                    # print(type(test))
                     # main_ui.listWidget_4.addItem(QListWidegetItem(str(test)))
-                    print("여기도됨")
+                    analysis1 += 1
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
                 percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
                 if 0 < percent_difference < 0.2:
                     print(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    #item = QListWidgetItem(f"{globalJongmokName} 검사1-2 통과 {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
+                    analysis2 += 1
+                    
 
             # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
             print("검사1 종료")
 
-            # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수 22.기관순매수
+            # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수 
 
         if TR_Name == "SABA101U1":
             print("매수/매도")
