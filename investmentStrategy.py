@@ -89,12 +89,11 @@ class indiWindow(QMainWindow):
 
                 if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
 
-                    jongmokCode = str(giCtrl.GetMultiData(i, 0))
                     button = QPushButton("담기")
                     main_ui.tableWidget.setCellWidget(i, 0, button)
                     button.clicked.connect(self.calculateMAButton_clicked)
 
-                    main_ui.tableWidget.setItem(i,1,QTableWidgetItem(jongmokCode)) # 종목코드
+                    main_ui.tableWidget.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
                     main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
                     main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 현재가
                     main_ui.tableWidget.setItem(i,4,QTableWidgetItem(previousDayChange)) # 전일대비구분
@@ -113,15 +112,14 @@ class indiWindow(QMainWindow):
         print("검사1 시작")
         TR_Name = "TR_1843_S" 
 
-        button = self.sender()  # 클릭된 버튼 가져오기
-        index = main_ui.tableWidget.indexAt(button.pos())  # 클릭된 버튼의 행 및 열 인덱스 가져오기
+        # 클릭된 행에 대한 데이터에 액세스하고 필요한 작업 수행
+        button = self.sender()
+        index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
             row = index.row()
-            # 클릭된 행에 대한 데이터에 액세스하고 필요한 작업 수행
             jongmokCode = main_ui.tableWidget.item(row, 1).text()
-            # jongmokCode 또는 다른 데이터를 사용하여 필요한 작업 수행
-
-        print(jongmokCode)
+        
+        print("종목코드: ", jongmokCode)
 
         ret = giCalculateMATRShow.SetQueryName(TR_Name)          
         ret = giCalculateMATRShow.SetSingleData(0, jongmokCode)  # 종목코드
