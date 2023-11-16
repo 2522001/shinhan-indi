@@ -24,7 +24,7 @@ class indiWindow(QMainWindow):
         main_ui.pushButton.clicked.connect(self.jongmokRecommendButton_clicked)
         main_ui.pushButton_2.clicked.connect(self.portfolioQueryButton_clicked)
         main_ui.pushButton_3_1.clicked.connect(self.buyButton_clicked)
-        # main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
+        main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
         #main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
         #main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
@@ -254,7 +254,7 @@ class indiWindow(QMainWindow):
                 print((str(giCtrl.GetSingleData(4))))
                 print((str(giCtrl.GetSingleData(5))))
 
-                # 새로운 행을 추가할 때
+                # 새로운 행을 추가할 때  << 여기 수정하기
                 new_row = QListWidgetItem()
                 main_ui.listWidget_3.addItem(new_row)
 
@@ -264,7 +264,6 @@ class indiWindow(QMainWindow):
                 new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
                 new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
             else:
-
                 print("주문이 정상적으로 처리되지 않았습니다.")
 
     # 매수
@@ -310,6 +309,45 @@ class indiWindow(QMainWindow):
 
 
     # 매도
+
+    def sellButton_clicked(self):
+        gaejwa = main_ui.lineEdit_3_1.text()
+        pw = main_ui.lineEdit_3_2.text()
+        jongmokCode = main_ui.lineEdit_3_3.text()
+        amount = main_ui.lineEdit_3_4.text()
+        price = main_ui.lineEdit_3_5.text()
+
+        TR_Name = "SABA101U1"          
+        ret = giJongmokTRShow.SetQueryName(TR_Name)          
+
+        ret = giJongmokTRShow.SetSingleData(0,gaejwa) # 계좌번호
+        ret = giJongmokTRShow.SetSingleData(1,"01") # 계좌상품
+        ret = giJongmokTRShow.SetSingleData(2,pw) # 계좌비밀번호
+        ret = giJongmokTRShow.SetSingleData(3, "")
+        ret = giJongmokTRShow.SetSingleData(4, "")
+        ret = giJongmokTRShow.SetSingleData(5,"0") # 선물대용매도여부
+        ret = giJongmokTRShow.SetSingleData(6,"00") # 신용거래구분 - 보통
+        ret = giJongmokTRShow.SetSingleData(7,"1") # 매도매수구분 - 매도
+        ret = giJongmokTRShow.SetSingleData(8,jongmokCode) # 종목코드
+        ret = giJongmokTRShow.SetSingleData(9,amount) # 주문수량
+        ret = giJongmokTRShow.SetSingleData(10,price) # 주문가격
+        ret = giJongmokTRShow.SetSingleData(11,"1") # 정규시간외구분코드 - 정규장
+        ret = giJongmokTRShow.SetSingleData(12,"2") # 호가유형코드 - 지정가
+        ret = giJongmokTRShow.SetSingleData(13,"0") # 주문조건코드 - 일반
+        ret = giJongmokTRShow.SetSingleData(14,"0") # 신용대출통합주문구분코드 - 해당없음
+        ret = giJongmokTRShow.SetSingleData(15, "")
+        ret = giJongmokTRShow.SetSingleData(16, "") 
+        ret = giJongmokTRShow.SetSingleData(17, "")
+        ret = giJongmokTRShow.SetSingleData(18, "")
+        ret = giJongmokTRShow.SetSingleData(19, "")
+        ret = giJongmokTRShow.SetSingleData(20, "") # 프로그램매매여부
+        ret = giJongmokTRShow.SetSingleData(21, "Y") # 결과메시지 처리여부
+
+        rqid = giJongmokTRShow.RequestData()
+        print(giJongmokTRShow.GetErrorCode())
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+        self.rqidD[rqid] = TR_Name 
 
 
 
