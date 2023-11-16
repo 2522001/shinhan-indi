@@ -198,7 +198,7 @@ class Ui_MainWindow(object):
         self.pushButton_3_1.setText(_translate("MainWindow", "매수"))
         self.lineEdit_3_3.setText(_translate("MainWindow", "종목코드"))
         self.groupBox.setTitle(_translate("MainWindow", "오늘의 종목"))
-        self.label.setText(_translate("MainWindow", "추천 종목을 조회해보세요."))
+        self.label.setText(_translate("MainWindow", "추천 종목을 조회합니다."))
         self.pushButton.setText(_translate("MainWindow", "조회"))
         self.groupBox_4.setTitle(_translate("MainWindow", "알림창"))
         self.groupBox_5.setTitle(_translate("MainWindow", "장바구니"))

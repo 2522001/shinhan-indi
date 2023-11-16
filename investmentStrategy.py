@@ -252,7 +252,7 @@ class indiWindow(QMainWindow):
             # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
             print("검사1 종료")
 
-            
+            # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수 22.기관순매수
 
         if TR_Name == "SABA101U1":
             print("매수/매도")
