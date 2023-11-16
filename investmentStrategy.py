@@ -9,6 +9,7 @@ import GiExpertControl as giTradingTRShow
 import GiExpertControl as giJongmokTRShow
 import GiExpertControl as giJongmokRealTime
 import GiExpertControl as giJongmokRecommendTRShow # 종목 추천
+import GiExpertControl as giCalculateMATRShow # 이동평균선 계산
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -28,6 +29,8 @@ class indiWindow(QMainWindow):
         giJongmokRealTime.RunIndiPython()
         giJongmokRecommendTRShow.SetQtMode(True)
         giJongmokRecommendTRShow.RunIndiPython()
+        giCalculateMATRShow.SetQtMode(True)
+        giCalculateMATRShow.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -41,6 +44,7 @@ class indiWindow(QMainWindow):
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
         giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
         giJongmokRecommendTRShow.SetCallBack('ReceiveData', self.giJongmokRecommendTRShow_ReceiveData)
+        # giCalculateMATRShow.SetCallBack('ReceiveData', self.giCalculateTRShow_ReceiveData)
         
         print(giLogin.GetCommState())
         if giLogin.GetCommState() == 0: # 정상
@@ -88,7 +92,7 @@ class indiWindow(QMainWindow):
                     jongmokCode = str(giCtrl.GetMultiData(i, 0))
                     button = QPushButton("담기")
                     main_ui.tableWidget.setCellWidget(i, 0, button)
-                    # button.clicked.connect(partial(self.pushButton_5_clicked, jongmokCode))
+                    button.clicked.connect(self.calculateMAButton_clicked)
 
                     main_ui.tableWidget.setItem(i,1,QTableWidgetItem(jongmokCode)) # 종목코드
                     main_ui.tableWidget.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
@@ -100,8 +104,21 @@ class indiWindow(QMainWindow):
 
                     for j in range(1,8):
                         tr_data_output[i].append(giCtrl.GetMultiData(i, j))
-            print(type(tr_data_output))
-            print(tr_data_output)
+            # print(type(tr_data_output))
+            # print(tr_data_output)
+
+    # 종목 추천 - 검사1 : 이동평균선
+
+    def calculateMAButton_clicked(self):
+        print("검사1 시작")
+        TR_Name = "TR_1843_S"          
+        ret = giCalculateMATRShow.SetQueryName(TR_Name)          
+        ret = giCalculateMATRShow.SetSingleData(0, "005930")  # 종목코드
+        ret = giCalculateMATRShow.SetSingleData(1, "125")  # 조회갯수
+        rqid = giCalculateMATRShow.RequestData()
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+        self.rqidD[rqid] = TR_Name
 
 
     # 나의 투자 분석 조회
