@@ -282,13 +282,13 @@ class indiWindow(QMainWindow):
                 jongmokLowPrice.append(int(lowPrice))
                 jongmokClosingPrice.append(int(closingPrice))
 
-            print(jongmokClosingPriceDate)
+            # print(jongmokClosingPriceDate)
             print(len(jongmokClosingPrice))
 
             # 이동평균선 구하기
 
             movingAverages = [5, 20, 60, 120]
-            MAList = [] # [[날짜, 현재가, 5일선, 20일선, 60일선, 120일선], ...]
+            MAList = [] # [[날짜, 저가, 5일선, 20일선, 60일선, 120일선], ...]
             index = 0
 
             for i in range(5):
@@ -298,7 +298,7 @@ class indiWindow(QMainWindow):
 
                 for interval in movingAverages:
                     if index + interval <= len(jongmokClosingPrice):
-                        print(f"index: {index}, interval: {interval}, sublist: {jongmokClosingPrice[index:index+interval]}")
+                        # print(f"index: {index}, interval: {interval}, sublist: {jongmokClosingPrice[index:index+interval]}")
                         # 현재 날짜부터 지정된 간격 동안의 종가를 추출하여 이동평균 계산
                         average = sum(jongmokClosingPrice[index:index+interval]) / interval
                         sublist.append(int(average))
@@ -307,7 +307,7 @@ class indiWindow(QMainWindow):
                 MAList.append(sublist)
                 index += 1
 
-            print(MAList)
+            # print(MAList)
 
             # 이동평균선을 활용한 종목 검사
 
@@ -319,18 +319,24 @@ class indiWindow(QMainWindow):
                 ma60 = sublist[4]
                 ma120 = sublist[5]
 
+                print(date, currentLowPrice, ma5, ma20, ma60, ma120)
+
                 # 각 날짜에 대해 이동평균선 조건 확인
                 if ma5 >= ma20 >= ma60 >= ma120:
                     print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.")
-                    message = f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.\n"
+                    message += f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.<br>"
 
                 # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
-                percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
+                # percent_difference = ((currentLowPrice - ma20) / currentLowPrice) * 100
 
-                if 0 < percent_difference < 0.2:
-                    print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
-                    message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n"
-
+                # if 0 < percent_difference < 0.2:
+                #     print(f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.")
+                #     message += f"[{globalJongmokName.strip()}] {date} 20일선이 주가보다 {percent_difference:.2f}% 만큼 아래에 있습니다.\n"
+            
+            if message == "":
+                print(f"[{globalJongmokName.strip()}] 특이사항이 없습니다.")
+                message += f"[{globalJongmokName.strip()}] 특이사항이 없습니다."
+                
             html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
                                 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
                                 "p, li { white-space: pre-wrap; }\n"\
