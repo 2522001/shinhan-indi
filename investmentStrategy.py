@@ -90,23 +90,23 @@ class indiWindow(QMainWindow):
         print("in receive_Data:",rqid)
         print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
         TR_Name = self.rqidD[rqid]
-        tr_data_output = []
-        output = []
-        totalProfit_output = []
-        totalProfit = 0
+        
 
+        # 코스피 시장 내 시가 총액 규모 상위 200위권 내 종목
+
+        print("TR_name : ",TR_Name)
         if TR_Name == "TR_1856_IND":
+            tr_data_output = []
             nCnt = giCtrl.GetMultiRowCount()
             print("c")
             for i in range(0, nCnt):
-                jongmokRecommend = []
+                tr_data_output.append([])
 
                 previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
 
                 if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
-                    jongmokRecommend.append([])
 
-                    button = QPushButton("담기")
+                    button = QPushButton("검사")
                     main_ui.tableWidget.setCellWidget(i, 0, button)
                     button.clicked.connect(self.calculateMAButton_clicked)
 
@@ -119,24 +119,32 @@ class indiWindow(QMainWindow):
                     main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
 
                     for j in range(1,8):
-                        jongmokRecommend[i].append(giCtrl.GetMultiData(i, j))
+                        tr_data_output[i].append(giCtrl.GetMultiData(i, j))
             
 
         if TR_Name == "SABA200QB":
+            totalProfit_output = []
+            totalProfit = 0
             nCnt = giCtrl.GetMultiRowCount()
             print("c")
             for i in range(0, nCnt):
-                tr_data_output.append([])
                 main_ui.tableWidget_2.setItem(i,0,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
                 main_ui.tableWidget_2.setItem(i,1,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
                 main_ui.tableWidget_2.setItem(i,2,QTableWidgetItem(str(giCtrl.GetMultiData(i, 2)))) # 결제일잔고수량
                 main_ui.tableWidget_2.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 5)))) # 현재가
                 main_ui.tableWidget_2.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 6)))) # 평균단가
 
-                profitRate = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) / float(giCtrl.GetMultiData(i, 6)) * 100)
+                try:
+                    profitRate = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) / float(giCtrl.GetMultiData(i, 6)) * 100)
+                except ZeroDivisionError:
+                    profitRate = "0"
                 main_ui.tableWidget_2.setItem(i,5,QTableWidgetItem(str(profitRate))) # 수익률 ((현재가-평균단가)/평균단가*100)
 
-                profit = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) * float(giCtrl.GetMultiData(i, 2)))
+                try:
+                    profit = str((float(giCtrl.GetMultiData(i, 5)) - float(giCtrl.GetMultiData(i, 6))) * float(giCtrl.GetMultiData(i, 2)))
+                except ValueError:
+                    profit = "0"
+                    
                 totalProfit_output.append(profit)
                 print(totalProfit_output)
                 main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(str(profit))) # 수익 ((현재가-평균단가)*결제일잔고수량)
@@ -144,12 +152,12 @@ class indiWindow(QMainWindow):
                 main_ui.tableWidget_2.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 3)))) # 매도미체결수량
                 main_ui.tableWidget_2.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 매수미체결수량
 
-                for j in range(0,9):
-                    tr_data_output[i].append(giCtrl.GetMultiData(i, j))
-            print(type(tr_data_output))
-            print(tr_data_output)
-
             # 목표 수익 달성률 계산
+
+            print("목표 수익 달성률 계산")
+
+            print("목표수익", targetProfit)
+
             if targetProfit and not targetProfit.isdigit():
                 targetProfitProgress = 0
             else:
@@ -300,22 +308,6 @@ class indiWindow(QMainWindow):
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name 
 
-    def giTradingTRShow_ReceiveData(self,giCtrl,rqid):
-        print("in receive_Data:",rqid)
-        print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
-        TR_Name = self.rqidD[rqid]
-        print("TR_name : ",TR_Name)
-
-        if TR_Name == "SABA101U1":
-            # 새로운 행을 추가할 때
-            new_row = QListWidgetItem()
-            main_ui.listWidget_3.addItem(new_row)
-
-            # 주문번호, 메시지1, 메시지2, 메시지3을 리스트에 추가
-            new_row.setData(0, str(giCtrl.GetSingleData(0)))  # 주문번호
-            new_row.setData(1, str(giCtrl.GetSingleData(3)))  # 메시지1
-            new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
-            new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
 
     # 매도
 
