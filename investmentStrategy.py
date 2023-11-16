@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 import pandas as pd
 import GiExpertControl as giJongmokTRShow
 from indiUI import Ui_MainWindow
+from datetime import datetime, timedelta
 
 main_ui = Ui_MainWindow()
 
@@ -45,7 +46,6 @@ class indiWindow(QMainWindow):
         print("검사1 시작")
         TR_Name = "TR_1843_S" 
 
-        # 클릭된 행에 대한 데이터에 액세스하고 필요한 작업 수행
         button = self.sender()
         index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
@@ -64,6 +64,35 @@ class indiWindow(QMainWindow):
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
 
+    # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수
+
+    def calculateVolumeButton_clicked(self):
+        print("검사2 시작")
+        TR_Name = "TR_1206" 
+
+        button = self.sender()
+        index = main_ui.tableWidget.indexAt(button.pos())
+        if index.isValid():
+            row = index.row()
+            jongmokCode = main_ui.tableWidget.item(row, 3).text()
+            global globalJongmokName
+            globalJongmokName = main_ui.tableWidget.item(row, 4).text()
+        
+        startDate = datetime.now()
+        endDate = startDate - timedelta(days=5)
+        startDate = startDate.strftime("%Y%m%d")
+        endDate = endDate.strftime("%Y%m%d")
+
+        ret = giJongmokTRShow.SetQueryName(TR_Name)          
+        ret = giJongmokTRShow.SetSingleData(0, jongmokCode) # 종목코드
+        ret = giJongmokTRShow.SetSingleData(1, startDate) # 시작일
+        ret = giJongmokTRShow.SetSingleData(2, endDate) # 종료일
+        ret = giJongmokTRShow.SetSingleData(3, "3") # 조회구분
+        ret = giJongmokTRShow.SetSingleData(3, "0") # 데이터 종류 구분 - 거래량
+        rqid = giJongmokTRShow.RequestData()
+        print(type(rqid))
+        print('Request Data rqid: ' + str(rqid))
+        self.rqidD[rqid] = TR_Name
 
     # 나의 투자 분석 조회
 
@@ -154,7 +183,7 @@ class indiWindow(QMainWindow):
 
                 button3 = QPushButton("검사2")
                 main_ui.tableWidget.setCellWidget(i, 2, button3)
-                # button3.clicked.connect(self.calculateVolumeButton_clicked)
+                button3.clicked.connect(self.calculateVolumeButton_clicked)
 
                 main_ui.tableWidget.setItem(i,3,QTableWidgetItem(str(giCtrl.GetMultiData(i, 0)))) # 종목코드
                 main_ui.tableWidget.setItem(i,4,QTableWidgetItem(str(giCtrl.GetMultiData(i, 1)))) # 종목명
@@ -309,12 +338,8 @@ class indiWindow(QMainWindow):
                                 f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
 
             main_ui.textBrowser_4_2.setHtml(html_content)
-                    
-
-            # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
             print("검사1 종료")
-
-            # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수 
+             
 
         if TR_Name == "SABA101U1":
             print("매수/매도")
