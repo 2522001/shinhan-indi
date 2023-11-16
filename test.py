@@ -4,7 +4,9 @@ from PyQt5.QtCore import *
 from PyQt5.QAxContainer import *
 from PyQt5.QtWidgets import *
 import pandas as pd
+import GiExpertControl as giLogin
 import GiExpertControl as giJongmokTRShow
+import GiExpertControl as giJongmokRealTime
 from indiUI import Ui_MainWindow
 
 main_ui = Ui_MainWindow()
@@ -16,8 +18,10 @@ class indiWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("IndiExample")
+        giLogin.RunIndiPython()
         giJongmokTRShow.SetQtMode(True)
         giJongmokTRShow.RunIndiPython()
+        giJongmokRealTime.RunIndiPython()
         self.rqidD = {}
         main_ui.setupUi(self)      
 
@@ -28,6 +32,18 @@ class indiWindow(QMainWindow):
         #main_ui.pushButton_5_1.clicked.connect(self.JongmokRealTimeQueryButton_clicked)
         #main_ui.pushButton_5_2.clicked.connect(self.JongmokRealTimeStopButton_clicked)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
+        #giJongmokRealTime.SetCallBack('ReceiveRTData', self.giJongmokRealTime_ReceiveRTData)
+        
+        print(giLogin.GetCommState())
+        if giLogin.GetCommState() == 0: # 정상
+            print("")        
+        elif  giLogin.GetCommState() == 1: # 비정상
+        #본인의 ID 및 PW 넣으셔야 합니다.
+            login_return = giLogin.StartIndi('아이디','비밀번호','공인인증서 비밀번호', 'C:\\SHINHAN-i\\indi\\GiExpertStarter.exe')
+            if login_return == True:
+                print("INDI 로그인 정보","INDI 정상 호출")
+            else:
+                print("INDI 로그인 정보","INDI 호출 실패")
 
     # 종목 추천
 
@@ -99,12 +115,11 @@ class indiWindow(QMainWindow):
             nCnt = giCtrl.GetMultiRowCount()
             print("c")
             for i in range(0, nCnt):
-                jongmokRecommend = []
+                tr_data_output.append([])
 
                 previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
 
                 if previousDayChange == "2" or previousDayChange == "3": # 전날 대비 상승이거나 보합인 경우만 출력
-                    jongmokRecommend.append([])
 
                     button = QPushButton("담기")
                     main_ui.tableWidget.setCellWidget(i, 0, button)
@@ -119,8 +134,7 @@ class indiWindow(QMainWindow):
                     main_ui.tableWidget.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 14)))) # 시가총액비중
 
                     for j in range(1,8):
-                        jongmokRecommend[i].append(giCtrl.GetMultiData(i, j))
-            
+                        tr_data_output[i].append(giCtrl.GetMultiData(i, j))
 
         if TR_Name == "SABA200QB":
             nCnt = giCtrl.GetMultiRowCount()
@@ -233,31 +247,30 @@ class indiWindow(QMainWindow):
             # 화면에 MAList 띄우기, 아래 두 조건 확인을 토대로 알림창에 메시지 (검사 통과 or 미통과)
             print("검사1 종료")
 
-        if TR_Name == "SABA101U1":
-            print("매수/매도")
-            nCnt = giCtrl.GetSingleRowCount()
-            print("c")
-            print(nCnt)
-            if nCnt != 0:
-                print((str(giCtrl.GetSingleData(0))))
-                print((str(giCtrl.GetSingleData(1))))
-                print((str(giCtrl.GetSingleData(2))))
-                print((str(giCtrl.GetSingleData(3))))
-                print((str(giCtrl.GetSingleData(4))))
-                print((str(giCtrl.GetSingleData(5))))
+        # if TR_Name == "SABA101U1":
+        #     print("매수/매도")
+        #     nCnt = giCtrl.GetSingleRowCount()
+        #     print("c")
+        #     print(nCnt)
+        #     if nCnt != 0:
+        #         print((str(giCtrl.GetSingleData(0))))
+        #         print((str(giCtrl.GetSingleData(1))))
+        #         print((str(giCtrl.GetSingleData(2))))
+        #         print((str(giCtrl.GetSingleData(3))))
+        #         print((str(giCtrl.GetSingleData(4))))
+        #         print((str(giCtrl.GetSingleData(5))))
 
-                # 새로운 행을 추가할 때
-                new_row = QListWidgetItem()
-                main_ui.listWidget_3.addItem(new_row)
+        #         # 새로운 행을 추가할 때
+        #         new_row = QListWidgetItem()
+        #         main_ui.listWidget_3.addItem(new_row)
 
-                # 주문번호, 메시지1, 메시지2, 메시지3을 리스트에 추가
-                new_row.setData(0, str(giCtrl.GetSingleData(0)))  # 주문번호
-                new_row.setData(1, str(giCtrl.GetSingleData(3)))  # 메시지1
-                new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
-                new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
-            else:
-
-                print("주문이 정상적으로 처리되지 않았습니다.")
+        #         # 주문번호, 메시지1, 메시지2, 메시지3을 리스트에 추가
+        #         new_row.setData(0, str(giCtrl.GetSingleData(0)))  # 주문번호
+        #         new_row.setData(1, str(giCtrl.GetSingleData(3)))  # 메시지1
+        #         new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
+        #         new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
+        #     else:
+        #         print("주문이 정상적으로 처리되지 않았습니다.")
 
     # 매수
 
@@ -269,36 +282,36 @@ class indiWindow(QMainWindow):
         price = main_ui.lineEdit_3_5.text()
 
         TR_Name = "SABA101U1"          
-        ret = giJongmokTRShow.SetQueryName(TR_Name)          
+        # ret = giJongmokTRShow.SetQueryName(TR_Name)          
 
-        ret = giJongmokTRShow.SetSingleData(0,gaejwa) # 계좌번호
-        ret = giJongmokTRShow.SetSingleData(1,"01") # 계좌상품
-        ret = giJongmokTRShow.SetSingleData(2,pw) # 계좌비밀번호
-        ret = giJongmokTRShow.SetSingleData(3, "")
-        ret = giJongmokTRShow.SetSingleData(4, "")
-        ret = giJongmokTRShow.SetSingleData(5,"0") # 선물대용매도여부
-        ret = giJongmokTRShow.SetSingleData(6,"00") # 신용거래구분 - 보통
-        ret = giJongmokTRShow.SetSingleData(7,"2") # 매도매수구분 - 매수
-        ret = giJongmokTRShow.SetSingleData(8,jongmokCode) # 종목코드
-        ret = giJongmokTRShow.SetSingleData(9,amount) # 주문수량
-        ret = giJongmokTRShow.SetSingleData(10,price) # 주문가격
-        ret = giJongmokTRShow.SetSingleData(11,"1") # 정규시간외구분코드 - 정규장
-        ret = giJongmokTRShow.SetSingleData(12,"2") # 호가유형코드 - 지정가
-        ret = giJongmokTRShow.SetSingleData(13,"0") # 주문조건코드 - 일반
-        ret = giJongmokTRShow.SetSingleData(14,"0") # 신용대출통합주문구분코드 - 해당없음
-        ret = giJongmokTRShow.SetSingleData(15, "")
-        ret = giJongmokTRShow.SetSingleData(16, "") 
-        ret = giJongmokTRShow.SetSingleData(17, "")
-        ret = giJongmokTRShow.SetSingleData(18, "")
-        ret = giJongmokTRShow.SetSingleData(19, "")
-        ret = giJongmokTRShow.SetSingleData(20, "") # 프로그램매매여부
-        ret = giJongmokTRShow.SetSingleData(21, "Y") # 결과메시지 처리여부
+        # ret = giJongmokTRShow.SetSingleData(0,gaejwa) # 계좌번호
+        # ret = giJongmokTRShow.SetSingleData(1,"01") # 계좌상품
+        # ret = giJongmokTRShow.SetSingleData(2,pw) # 계좌비밀번호
+        # ret = giJongmokTRShow.SetSingleData(3, "")
+        # ret = giJongmokTRShow.SetSingleData(4, "")
+        # ret = giJongmokTRShow.SetSingleData(5,"0") # 선물대용매도여부
+        # ret = giJongmokTRShow.SetSingleData(6,"00") # 신용거래구분 - 보통
+        # ret = giJongmokTRShow.SetSingleData(7,"2") # 매도매수구분 - 매수
+        # ret = giJongmokTRShow.SetSingleData(8,jongmokCode) # 종목코드
+        # ret = giJongmokTRShow.SetSingleData(9,amount) # 주문수량
+        # ret = giJongmokTRShow.SetSingleData(10,price) # 주문가격
+        # ret = giJongmokTRShow.SetSingleData(11,"1") # 정규시간외구분코드 - 정규장
+        # ret = giJongmokTRShow.SetSingleData(12,"2") # 호가유형코드 - 지정가
+        # ret = giJongmokTRShow.SetSingleData(13,"0") # 주문조건코드 - 일반
+        # ret = giJongmokTRShow.SetSingleData(14,"0") # 신용대출통합주문구분코드 - 해당없음
+        # ret = giJongmokTRShow.SetSingleData(15, "")
+        # ret = giJongmokTRShow.SetSingleData(16, "") 
+        # ret = giJongmokTRShow.SetSingleData(17, "")
+        # ret = giJongmokTRShow.SetSingleData(18, "")
+        # ret = giJongmokTRShow.SetSingleData(19, "")
+        # ret = giJongmokTRShow.SetSingleData(20, "") # 프로그램매매여부
+        # ret = giJongmokTRShow.SetSingleData(21, "Y") # 결과메시지 처리여부
 
-        rqid = giJongmokTRShow.RequestData()
-        print(giJongmokTRShow.GetErrorCode())
-        print(type(rqid))
-        print('Request Data rqid: ' + str(rqid))
-        self.rqidD[rqid] = TR_Name 
+        # rqid = giJongmokTRShow.RequestData()
+        # print(giJongmokTRShow.GetErrorCode())
+        # print(type(rqid))
+        # print('Request Data rqid: ' + str(rqid))
+        # self.rqidD[rqid] = TR_Name 
 
     def giTradingTRShow_ReceiveData(self,giCtrl,rqid):
         print("in receive_Data:",rqid)
@@ -321,8 +334,41 @@ class indiWindow(QMainWindow):
 
 
 
+
+
+
+
+
+
+
+
+
+    # 시세 조회
+
+    # def JongmokRealTimeQueryButton_clicked(self):      
+    #     jongmokCode = main_ui.lineEdit_5.text()
+    #     rqid = giJongmokRealTime.RequestRTReg("SC",jongmokCode)
+    #     print(type(rqid))
+    #     print('Request Data rqid: ' + str(rqid))
+
+    # def giJongmokRealTime_ReceiveRTData(self,giCtrl,RealType):
+    #     if RealType == "SC":
+    #         main_ui.tableWidget_5.insertRow(main_ui.tableWidget_5.rowCount())
+    #         final_rowCount = main_ui.tableWidget_5.rowCount() - 1
+    #         main_ui.tableWidget_5.setItem(final_rowCount,0,QTableWidgetItem(str(giCtrl.GetSingleData(1))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,1,QTableWidgetItem(str(giCtrl.GetSingleData(2))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,2,QTableWidgetItem(str(giCtrl.GetSingleData(3))))
+    #         main_ui.tableWidget_5.setItem(final_rowCount,3,QTableWidgetItem(str(giCtrl.GetSingleData(6))))
+
+    # def JongmokRealTimeStopButton_clicked(self):
+    #     giJongmokRealTime.UnRequestRTReg("SC", "")
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     IndiWindow = indiWindow()    
     IndiWindow.show()
     app.exec_()
+
+    if IndiWindow.MainSymbol != "":
+        giJongmokRealTime.UnRequestRTReg("SC", "")
