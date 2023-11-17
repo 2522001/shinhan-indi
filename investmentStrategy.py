@@ -177,14 +177,12 @@ class indiWindow(QMainWindow):
         print("TR_name : ",TR_Name)
 
         # 종목 추천
-        
-        if TR_Name == "TR_1856_IND":
-            tr_data_output = []
-            nCnt = giCtrl.GetMultiRowCount()
-            print("c")
-            for i in range(0, nCnt):
-                tr_data_output.append([])
 
+        if TR_Name == "TR_1856_IND":
+
+            nCnt = giCtrl.GetMultiRowCount()
+
+            for i in range(0, nCnt):
                 previousDayChange = str(giCtrl.GetMultiData(i, 3)) # 상한(1)상승(2)보합(3)하한(4)하락(5)
 
                 button1 = QPushButton("담기")
@@ -213,20 +211,21 @@ class indiWindow(QMainWindow):
                         if item is not None:
                             item.setBackground(QColor(255, 194, 205))
 
-                elif previousDayChange == "3": #보합
+                elif previousDayChange == "3": # 보합
                     for col in range(main_ui.tableWidget.columnCount()):
                         item = main_ui.tableWidget.item(i, col)
                         if item is not None:
                             item.setBackground(QColor(255, 250, 205))
+            print("종목추천 종료")
 
-                for j in range(3,10):
-                    tr_data_output[i].append(giCtrl.GetMultiData(i, j))
+        # 나의 투자 분석
                     
         if TR_Name == "SABA200QB":
+
             totalProfit_output = []
             totalProfit = 0
             nCnt = giCtrl.GetMultiRowCount()
-            print("c")
+
             for i in range(0, nCnt):
                 main_ui.tableWidget_2.setRowCount(nCnt)
 
@@ -248,17 +247,14 @@ class indiWindow(QMainWindow):
                     profit = "0"
                     
                 totalProfit_output.append(profit)
-                print(totalProfit_output)
-                main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(profit)) # 수익 ((현재가-평균단가)*결제일잔고수량)
 
+                main_ui.tableWidget_2.setItem(i,6,QTableWidgetItem(profit)) # 수익 ((현재가-평균단가)*결제일잔고수량)
                 main_ui.tableWidget_2.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 3)))) # 매도미체결수량
                 main_ui.tableWidget_2.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 매수미체결수량
 
             # 목표 수익 달성률 계산
 
             print("목표 수익 달성률 계산")
-
-            print("목표수익", targetProfit)
 
             if targetProfit and not targetProfit.isdigit():
                 targetProfitProgress = 0
@@ -276,14 +272,16 @@ class indiWindow(QMainWindow):
                     targetProfitProgress = 0
 
             main_ui.progressBar_2.setProperty("value", targetProfitProgress)
+            print("나의 투자 분석 종료")
+
+        # 검사1 - 이동평균선 계산
 
         if TR_Name == "TR_1843_S":
-
-            # 종가 데이터 담기
 
             nCnt = giCtrl.GetMultiRowCount()
             message = ""
 
+            # 종가 데이터 담기
             jongmokClosingPriceDate = []
             jongmokLowPrice = []
             jongmokClosingPrice = []
@@ -292,15 +290,12 @@ class indiWindow(QMainWindow):
                 date = str(giCtrl.GetMultiData(i, 0)) # 일자
                 lowPrice = str(giCtrl.GetMultiData(i, 3)) # 저가
                 closingPrice = str(giCtrl.GetMultiData(i, 4)) # 종가
+
                 jongmokClosingPriceDate.append(date)
                 jongmokLowPrice.append(int(lowPrice))
                 jongmokClosingPrice.append(int(closingPrice))
 
-            # print(jongmokClosingPriceDate)
-            print(len(jongmokClosingPrice))
-
             # 이동평균선 구하기
-
             movingAverages = [5, 20, 60, 120]
             MAList = [] # [[날짜, 저가, 5일선, 20일선, 60일선, 120일선], ...]
             index = 0
@@ -312,7 +307,6 @@ class indiWindow(QMainWindow):
 
                 for interval in movingAverages:
                     if index + interval <= len(jongmokClosingPrice):
-                        # print(f"index: {index}, interval: {interval}, sublist: {jongmokClosingPrice[index:index+interval]}")
                         # 현재 날짜부터 지정된 간격 동안의 종가를 추출하여 이동평균 계산
                         average = sum(jongmokClosingPrice[index:index+interval]) / interval
                         sublist.append(int(average))
@@ -321,10 +315,7 @@ class indiWindow(QMainWindow):
                 MAList.append(sublist)
                 index += 1
 
-            # print(MAList)
-
             # 이동평균선을 활용한 종목 검사
-
             for sublist in MAList:
                 date = sublist[0]
                 currentLowPrice = sublist[1]
@@ -340,7 +331,7 @@ class indiWindow(QMainWindow):
                     print(f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.\n")
                     message += f"[{globalJongmokName.strip()}] {date} 이동평균선이 정배열된 양지차트입니다.<br>"
 
-                # 각 날짜에 대해 20일선이 주가보다 작거나 같은지 확인
+                # 각 날짜에 대해 20일선이 저가보다 같거나 한 발 아래인지 확인
                 if currentLowPrice == 0:
                     percent_difference = 0
                 else:
@@ -362,6 +353,8 @@ class indiWindow(QMainWindow):
 
             main_ui.textBrowser_4_2.setHtml(html_content)
             print("검사1 종료")
+
+        # 검사2 - 거래량 분석
 
         if TR_Name == "TR_1206":
 
@@ -401,11 +394,13 @@ class indiWindow(QMainWindow):
             main_ui.textBrowser_4_3.setHtml(html_content)
             print("검사2 종료")
 
+
+        # 매수/매도
+
         if TR_Name == "SABA101U1":
-            print("매수/매도")
+
             nCnt = giCtrl.GetSingleRowCount()
-            print("c")
-            print(nCnt)
+
             if nCnt != 0:
                 print((str(giCtrl.GetSingleData(0))))
                 print((str(giCtrl.GetSingleData(1))))
@@ -413,31 +408,25 @@ class indiWindow(QMainWindow):
                 print((str(giCtrl.GetSingleData(3))))
                 print((str(giCtrl.GetSingleData(4))))
                 print((str(giCtrl.GetSingleData(5))))
-
-                # 새로운 행을 추가할 때  << 여기 수정하기
-                new_row = QListWidgetItem()
-                main_ui.listWidget_3.addItem(new_row)
-
-                # 주문번호, 메시지1, 메시지2, 메시지3을 리스트에 추가
-                new_row.setData(0, str(giCtrl.GetSingleData(0)))  # 주문번호
-                new_row.setData(1, str(giCtrl.GetSingleData(3)))  # 메시지1
-                new_row.setData(2, str(giCtrl.GetSingleData(4)))  # 메시지2
-                new_row.setData(3, str(giCtrl.GetSingleData(5)))  # 메시지3
+                print("주문이 처리되었습니다.")
             else:
-                print("주문이 정상적으로 처리되지 않았습니다.")
+                print("주문이 처리되지 않았습니다.")
+            print("매수/매도 종료")
 
     # 매수
 
     def buyButton_clicked(self):
+
+        print("매수 시작")
+        TR_Name = "SABA101U1"
+
         gaejwa = main_ui.lineEdit_3_1.text()
         pw = main_ui.lineEdit_3_2.text()
         jongmokCode = main_ui.lineEdit_3_3.text()
         amount = main_ui.lineEdit_3_4.text()
         price = main_ui.lineEdit_3_5.text()
 
-        TR_Name = "SABA101U1"          
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
-
         ret = giJongmokTRShow.SetSingleData(0,gaejwa) # 계좌번호
         ret = giJongmokTRShow.SetSingleData(1,"01") # 계좌상품
         ret = giJongmokTRShow.SetSingleData(2,pw) # 계좌비밀번호
@@ -460,8 +449,8 @@ class indiWindow(QMainWindow):
         ret = giJongmokTRShow.SetSingleData(19, "")
         ret = giJongmokTRShow.SetSingleData(20, "") # 프로그램매매여부
         ret = giJongmokTRShow.SetSingleData(21, "Y") # 결과메시지 처리여부
-
         rqid = giJongmokTRShow.RequestData()
+
         print(giJongmokTRShow.GetErrorCode())
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
@@ -471,15 +460,17 @@ class indiWindow(QMainWindow):
     # 매도
 
     def sellButton_clicked(self):
+
+        print("매도 시작")
+        TR_Name = "SABA101U1"
+
         gaejwa = main_ui.lineEdit_3_1.text()
         pw = main_ui.lineEdit_3_2.text()
         jongmokCode = main_ui.lineEdit_3_3.text()
         amount = main_ui.lineEdit_3_4.text()
         price = main_ui.lineEdit_3_5.text()
-
-        TR_Name = "SABA101U1"          
+      
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
-
         ret = giJongmokTRShow.SetSingleData(0,gaejwa) # 계좌번호
         ret = giJongmokTRShow.SetSingleData(1,"01") # 계좌상품
         ret = giJongmokTRShow.SetSingleData(2,pw) # 계좌비밀번호
@@ -502,14 +493,12 @@ class indiWindow(QMainWindow):
         ret = giJongmokTRShow.SetSingleData(19, "")
         ret = giJongmokTRShow.SetSingleData(20, "") # 프로그램매매여부
         ret = giJongmokTRShow.SetSingleData(21, "Y") # 결과메시지 처리여부
-
         rqid = giJongmokTRShow.RequestData()
+
         print(giJongmokTRShow.GetErrorCode())
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name 
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
