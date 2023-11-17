@@ -273,6 +273,18 @@ class indiWindow(QMainWindow):
                 main_ui.tableWidget_2.setItem(i,7,QTableWidgetItem(str(giCtrl.GetMultiData(i, 3)))) # 매도미체결수량
                 main_ui.tableWidget_2.setItem(i,8,QTableWidgetItem(str(giCtrl.GetMultiData(i, 4)))) # 매수미체결수량
 
+                if int(profit) > 0: # 이득 종목
+                    for col in range(main_ui.tableWidget.columnCount()):
+                        item = main_ui.tableWidget_2.item(i, col)
+                        if item is not None:
+                            item.setBackground(QColor(255, 194, 205))
+
+                elif int(profit) < 0: # 손해 종목
+                    for col in range(main_ui.tableWidget.columnCount()):
+                        item = main_ui.tableWidget_2.item(i, col)
+                        if item is not None:
+                            item.setBackground(QColor(173, 227, 240))
+
             # 목표 수익 달성률 계산
 
             print("목표 수익 달성률 계산")
@@ -425,7 +437,6 @@ class indiWindow(QMainWindow):
 
             main_ui.textBrowser_4_3.setHtml(html_content)
             print("검사2 종료")
-
 
         # 매수/매도
 
