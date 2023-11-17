@@ -176,7 +176,10 @@ class indiWindow(QMainWindow):
         if index.isValid():
             row = index.row()
             jongmokCode = main_ui.tableWidget_5.item(row, 1).text()
+            currentPrice = main_ui.tableWidget_5.item(row, 3).text()
+
             main_ui.lineEdit_3_3.setText("A" + jongmokCode)
+            main_ui.lineEdit_3_5.setText(currentPrice)
         
         message = f"주문에 종목코드가 입력되었습니다. ({jongmokCode})"
         html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
