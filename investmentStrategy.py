@@ -28,20 +28,26 @@ class indiWindow(QMainWindow):
         main_ui.pushButton_3_2.clicked.connect(self.sellButton_clicked)
         giJongmokTRShow.SetCallBack('ReceiveData', self.giJongmokTRShow_ReceiveData)
 
-    # 종목 추천
+    # 종목 추천 - TR_1856_IND
 
     def jongmokRecommendButton_clicked(self):
+
         print("종목추천 시작")
-        TR_Name = "TR_1856_IND"          
+        TR_Name = "TR_1856_IND" 
+
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
         ret = giJongmokTRShow.SetSingleData(0,"2") # 장구분 - 전체
         ret = giJongmokTRShow.SetSingleData(1,"200") # 조회갯수 - 200개
         rqid = giJongmokTRShow.RequestData()
+
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
 
+    # 검사1 - TR_1843_S
+
     def calculateMAButton_clicked(self):
+
         print("검사1 시작")
         TR_Name = "TR_1843_S" 
 
@@ -52,20 +58,20 @@ class indiWindow(QMainWindow):
             jongmokCode = main_ui.tableWidget.item(row, 3).text()
             global globalJongmokName
             globalJongmokName = main_ui.tableWidget.item(row, 4).text()
-        
-        print("종목코드: ", jongmokCode)
 
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
         ret = giJongmokTRShow.SetSingleData(0, jongmokCode)  # 종목코드
         ret = giJongmokTRShow.SetSingleData(1, "130")  # 조회갯수
         rqid = giJongmokTRShow.RequestData()
+
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
 
-    # 외국인/기관 순매수량이 전체 거래량의 20% 이상 TR_1206 7.누적거래량 16.외국인순매수
+    # 검사2 - TR_1206
 
     def calculateVolumeButton_clicked(self):
+
         print("검사2 시작")
         TR_Name = "TR_1206" 
 
@@ -87,30 +93,32 @@ class indiWindow(QMainWindow):
         ret = giJongmokTRShow.SetSingleData(1, startDate) # 시작일
         ret = giJongmokTRShow.SetSingleData(2, endDate) # 종료일
         ret = giJongmokTRShow.SetSingleData(3, "0") # 조회구분
-        ret = giJongmokTRShow.SetSingleData(3, "0") # 데이터 종류 구분 - 거래량
+        ret = giJongmokTRShow.SetSingleData(4, "0") # 데이터 종류 구분 - 거래량
         rqid = giJongmokTRShow.RequestData()
+
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name
 
-    # 나의 투자 분석 조회
+    # 나의 투자 분석 - SABA200QB
 
     def portfolioQueryButton_clicked(self):
+
+        print("나의 투자 분석 시작")
+        TR_Name = "SABA200QB"
+
         gaejwa_text = main_ui.lineEdit_2_1.text()
         pw_text = main_ui.lineEdit_2_2.text()
-
         global targetProfit
         targetProfit_text = main_ui.lineEdit_2_3.text()
         targetProfit = targetProfit_text
-
-        TR_Name = "SABA200QB"          
+                 
         ret = giJongmokTRShow.SetQueryName(TR_Name)          
-        # print(giJongmokTRShow.GetErrorCode())
-        # print(giJongmokTRShow.GetErrorMessage())
         ret = giJongmokTRShow.SetSingleData(0,gaejwa_text)
         ret = giJongmokTRShow.SetSingleData(1,"01")
         ret = giJongmokTRShow.SetSingleData(2,pw_text)
         rqid = giJongmokTRShow.RequestData()
+
         print(type(rqid))
         print('Request Data rqid: ' + str(rqid))
         self.rqidD[rqid] = TR_Name    
@@ -118,6 +126,9 @@ class indiWindow(QMainWindow):
     # 장바구니 담기
 
     def addToCartButton_clicked(self):
+
+        print("장바구니 담기")
+
         button = self.sender()
         index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
@@ -131,7 +142,7 @@ class indiWindow(QMainWindow):
             capitalization = main_ui.tableWidget.item(row, 9).text()
             
             rowCount =  main_ui.tableWidget_5.rowCount()
-            main_ui.tableWidget_5.setRowCount(rowCount+1)
+            main_ui.tableWidget_5.setRowCount(rowCount + 1)
 
             button = QPushButton("매수")
             main_ui.tableWidget_5.setCellWidget(rowCount, 0, button)
@@ -145,9 +156,12 @@ class indiWindow(QMainWindow):
             main_ui.tableWidget_5.setItem(rowCount,6,QTableWidgetItem(previousDayChange3)) # 전일대비율
             main_ui.tableWidget_5.setItem(rowCount,7,QTableWidgetItem(capitalization)) # 시가총액비중
 
-    # 종목코드 셋팅
+    # 장바구니 내 매수 클릭 시 주문에 종목코드 입력
 
     def setJongmokCodeButton_clicked(self):
+
+        print("종목코드 입력")
+
         button = self.sender()
         index = main_ui.tableWidget.indexAt(button.pos())
         if index.isValid():
@@ -156,13 +170,14 @@ class indiWindow(QMainWindow):
             main_ui.lineEdit_3_3.setText("A" + jongmokCode)
 
     def giJongmokTRShow_ReceiveData(self,giCtrl,rqid):
+
         print("in receive_Data:",rqid)
         print('recv rqid: {}->{}\n'.format(rqid, self.rqidD[rqid]))
         TR_Name = self.rqidD[rqid]
-        
-        # 시가 총액 규모 상위 200위권 내 종목
-
         print("TR_name : ",TR_Name)
+
+        # 종목 추천
+        
         if TR_Name == "TR_1856_IND":
             tr_data_output = []
             nCnt = giCtrl.GetMultiRowCount()
