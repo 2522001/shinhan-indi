@@ -172,10 +172,10 @@ class indiWindow(QMainWindow):
         print("종목코드 입력")
 
         button = self.sender()
-        index = main_ui.tableWidget.indexAt(button.pos())
+        index = main_ui.tableWidget_5.indexAt(button.pos())
         if index.isValid():
             row = index.row()
-            jongmokCode = main_ui.tableWidget.item(row, 3).text()
+            jongmokCode = main_ui.tableWidget_5.item(row, 1).text()
             main_ui.lineEdit_3_3.setText("A" + jongmokCode)
         
         message = f"주문에 종목코드가 입력되었습니다. ({jongmokCode})"
