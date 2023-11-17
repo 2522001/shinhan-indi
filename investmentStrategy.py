@@ -155,6 +155,15 @@ class indiWindow(QMainWindow):
             main_ui.tableWidget_5.setItem(rowCount,5,QTableWidgetItem(previousDayChange2)) # 전일대비
             main_ui.tableWidget_5.setItem(rowCount,6,QTableWidgetItem(previousDayChange3)) # 전일대비율
             main_ui.tableWidget_5.setItem(rowCount,7,QTableWidgetItem(capitalization)) # 시가총액비중
+        
+        message = f"장바구니에 [{jongmokName.strip()}] 종목이 담겼습니다."
+        html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                            "p, li { white-space: pre-wrap; }\n"\
+                            "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                            f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+        main_ui.textBrowser_4_1.setHtml(html_content)
 
     # 장바구니 내 매수 클릭 시 주문에 종목코드 입력
 
@@ -168,6 +177,15 @@ class indiWindow(QMainWindow):
             row = index.row()
             jongmokCode = main_ui.tableWidget.item(row, 3).text()
             main_ui.lineEdit_3_3.setText("A" + jongmokCode)
+        
+        message = f"주문에 종목코드가 입력되었습니다. ({jongmokCode})"
+        html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                            "p, li { white-space: pre-wrap; }\n"\
+                            "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                            f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+        main_ui.textBrowser_4_1.setHtml(html_content)
 
     def giJongmokTRShow_ReceiveData(self,giCtrl,rqid):
 
