@@ -260,11 +260,11 @@ class indiWindow(QMainWindow):
                 targetProfitProgress = 0
             else:
                 profits = [int(float(profit)) for profit in totalProfit_output]
-                print("TARGET PROFIT", targetProfit)
+                print("목표 수익:", targetProfit)
                 totalProfit = sum(profits)
-                print(totalProfit)
-                targetProfitProgress = (totalProfit / int(targetProfit)) * 100
-                print(targetProfitProgress)
+                print("전체 수익:", totalProfit)
+                targetProfitProgress = int((totalProfit / int(targetProfit)) * 100)
+                print("목표 수익 달성률:", targetProfitProgress)
 
                 if targetProfitProgress > 100:
                     targetProfitProgress = 100
@@ -272,6 +272,17 @@ class indiWindow(QMainWindow):
                     targetProfitProgress = 0
 
             main_ui.progressBar_2.setProperty("value", targetProfitProgress)
+
+            message = f"전체 수익은 {totalProfit}원, 목표 수익 달성률은 {targetProfitProgress}%입니다."
+            html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                                "p, li { white-space: pre-wrap; }\n"\
+                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+            main_ui.textBrowser_4_1.setHtml(html_content)
+
+            print("검사1 종료")
             print("나의 투자 분석 종료")
 
         # 검사1 - 이동평균선 계산
