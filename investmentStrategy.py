@@ -83,8 +83,8 @@ class indiWindow(QMainWindow):
             global globalJongmokName
             globalJongmokName = main_ui.tableWidget.item(row, 4).text()
         
-        startDate = datetime.now() - timedelta(days=4)
-        endDate = datetime.now()
+        startDate = datetime.now() - timedelta(days=5)
+        endDate = datetime.now() - timedelta(days=1)
         startDate = startDate.strftime("%Y%m%d")
         endDate = endDate.strftime("%Y%m%d")
 
@@ -165,11 +165,11 @@ class indiWindow(QMainWindow):
 
         main_ui.textBrowser_4_1.setHtml(html_content)
 
-    # 장바구니 내 매수 클릭 시 주문에 종목코드 입력
+    # 장바구니 내 매수 클릭 시 주문에 종목코드 및 현재가 입력
 
     def setJongmokCodeButton_clicked(self):
 
-        print("종목코드 입력")
+        print("종목코드 및 현재가 입력")
 
         button = self.sender()
         index = main_ui.tableWidget_5.indexAt(button.pos())
