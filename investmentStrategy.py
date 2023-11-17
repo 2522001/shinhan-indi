@@ -431,15 +431,36 @@ class indiWindow(QMainWindow):
             nCnt = giCtrl.GetSingleRowCount()
 
             if nCnt != 0:
-                print((str(giCtrl.GetSingleData(0))))
-                print((str(giCtrl.GetSingleData(1))))
-                print((str(giCtrl.GetSingleData(2))))
-                print((str(giCtrl.GetSingleData(3))))
-                print((str(giCtrl.GetSingleData(4))))
-                print((str(giCtrl.GetSingleData(5))))
+                orderNumber = str(giCtrl.GetSingleData(0)) # 주문번호
+                message1 = str(giCtrl.GetSingleData(3)) # 성공 시 총주문금액, 실패 시 증거금부족금액/유가증권부족수량
+                message2 = str(giCtrl.GetSingleData(4)) # 성공 시 가계산수수료, 실패 시 주문가능수량
+                message3 = str(giCtrl.GetSingleData(5))
+
+                print(orderNumber, message1, message2)
                 print("주문이 처리되었습니다.")
+
+                if orderNumber == "0":
+                    if message3 == "": # 매도
+                        message = f"[매도] 주문 에러입니다. 주문번호: {orderNumber}<br>{message1}, {message2}"
+                    else:
+                        message = f"[매수] 주문 에러입니다. 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
+                else:
+                    if message3 == "": # 매수
+                        message = f"[매수] 정상 주문입니다. 주문번호: {orderNumber}<br>{message1}, {message2}"
+                    else:
+                        message = f"[매도] 정상 주문입니다. 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
+            
             else:
+                message = f"주문 에러입니다."
                 print("주문이 처리되지 않았습니다.")
+
+            html_content = f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"\
+                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"\
+                                "p, li { white-space: pre-wrap; }\n"\
+                                "</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"\
+                                f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{message}</p></body></html>"
+
+            main_ui.textBrowser_4_1.setHtml(html_content)
             print("매수/매도 종료")
 
     # 매수
