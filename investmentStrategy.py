@@ -444,14 +444,14 @@ class indiWindow(QMainWindow):
 
                 if orderNumber == "0":
                     if message3 == "": # 매도
-                        message = f"[매도] 주문 에러입니다. 주문번호: {orderNumber}<br>{message1}, {message2}"
+                        message = f"<b>[매도] 주문 에러입니다.</b> 주문번호: {orderNumber}<br>{message1}, {message2}"
                     else:
-                        message = f"[매수] 주문 에러입니다. 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
+                        message = f"<b>[매수] 주문 에러입니다.</b> 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
                 else:
                     if message3 == "": # 매수
-                        message = f"[매수] 정상 주문입니다. 주문번호: {orderNumber}<br>{message1}, {message2}"
+                        message = f"<b>[매수] 정상 주문입니다.</b> 주문번호: {orderNumber}<br>{message1}, {message2}"
                     else:
-                        message = f"[매도] 정상 주문입니다. 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
+                        message = f"<b>[매도] 정상 주문입니다.</b> 주문번호: {orderNumber}<br>{message1}, {message2}, {message3}"
             
             else:
                 message = f"주문 에러입니다."
